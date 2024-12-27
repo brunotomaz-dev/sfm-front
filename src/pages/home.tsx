@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col } from 'react-bootstrap';
+import { Card, Col, Row } from 'react-bootstrap';
 import { getIndicator } from '../api/apiRequests';
 import GaugeChart from '../components/gauge';
 import { IndicatorType } from '../helpers/constants';
@@ -43,9 +43,9 @@ const Home: React.FC = () => {
         <p>Seja bem-vindo ao sistema de gestão de produção da Santa Massa</p>
         <h1 className="text-center p-2">Dados do dia</h1>
         <section className="container-fluid">
-          <div className="row">
+          <Row className="row">
             <Col>
-              <Card className="bg-transparent shadow border-0 p-2">
+              <Card className="bg-transparent shadow border-0 p-2 pb-4">
                 <h4 className="card-title text-center p-2">Indicadores de eficiência</h4>
                 <div className="d-flex flex-row justify-content-center align-items-center">
                   <GaugeChart
@@ -65,9 +65,21 @@ const Home: React.FC = () => {
               </Card>
             </Col>
             <Col>
-              <h1 className="border border-primary">Outra coluna</h1>
+              <h1 className="border border-primary rounded p-2">Absenteísmo</h1>
             </Col>
-          </div>
+          </Row>
+          <Row className="mt-3">
+            <Col>
+              <h1 className="border border-info rounded p-2">Produção</h1>
+              <h1 className="border border-warning rounded p-2">Carrinhos</h1>
+            </Col>
+            <Col>
+              <h1 className="border border-success rounded p-2">Linhas Rodando</h1>
+            </Col>
+            <Col>
+              <h1 className="border border-danger rounded p-2">Estoque</h1>
+            </Col>
+          </Row>
         </section>
       </main>
     </>
