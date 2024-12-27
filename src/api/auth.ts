@@ -1,5 +1,7 @@
 import { AxiosError, isAxiosError } from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { clearUser } from '../redux/store/features/userSlice';
+import { useAppDispatch } from '../redux/store/hooks';
 import axios from './axiosConfig';
 
 interface DecodedToken {
@@ -18,13 +20,20 @@ export const register = async (username: string, password: string, email: string
 
 export const login = async (username: string, password: string): Promise<DecodedToken> => {
   try {
+    // Faz a requisição para obter o token
     const response = await axios.post('/api/token/', { username, password });
+    // Recebe o token e outros dados do usuário
     const { access, refresh, first_name, last_name, groups } = response.data;
+
+    // Salva o token no localStorage
     localStorage.setItem('access_token', access);
     localStorage.setItem('refresh_token', refresh);
     localStorage.setItem('username', `${first_name} ${last_name}`);
     localStorage.setItem('groups', groups);
+
+    // Retorna o token decodificado
     return jwtDecode<DecodedToken>(access);
+
   } catch (error: unknown) {
     if (isAxiosError(error)) {
       const axiosError = error as AxiosError;
@@ -41,4 +50,7 @@ export const logout = () => {
   localStorage.removeItem('refresh_token');
   localStorage.removeItem('username');
   localStorage.removeItem('groups');
+
+  const dispatch = useAppDispatch();
+  dispatch(clearUser());
 };

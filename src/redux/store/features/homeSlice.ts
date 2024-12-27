@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface HomeState {
+interface CountState {
   count: number;
 }
 
-const initialState: HomeState = {
+const initialState: CountState = {
   count: 0,
 };
 

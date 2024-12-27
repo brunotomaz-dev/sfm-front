@@ -4,6 +4,7 @@ import './App.css';
 import PrivateRoute from './api/PrivateRoute';
 import Sidebar from './components/sidebar';
 import { groupLevels } from './helpers/constants';
+import HomeFake from './pages/example';
 import HistoricLines from './pages/histLines';
 import Home from './pages/home';
 import LiveLines from './pages/liveLines';
@@ -19,8 +20,8 @@ function App() {
         <Sidebar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/sfm" element={<PrivateRoute element={<ShopFloor />} allowedGroups={[...groupLevels[5]]} />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="sfm" element={<PrivateRoute element={<ShopFloor />} allowedGroups={[...groupLevels[5]]} />} />
           <Route
             path="p-live"
             element={<PrivateRoute element={<ProductionLive />} allowedGroups={[...groupLevels[4]]} />}
@@ -34,6 +35,7 @@ function App() {
             path="management"
             element={<PrivateRoute element={<Management />} allowedGroups={[...groupLevels[4]]} />}
           />
+          <Route path="init" element={<HomeFake />} />
         </Routes>
       </main>
     </>

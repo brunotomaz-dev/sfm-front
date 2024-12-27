@@ -1,19 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../api/auth';
 import STMLogoPxB from '../assets/Login_pxb.png';
 import STMLogo from '../assets/Logo Santa Massa.png';
 import { groupLevels } from '../helpers/constants';
 import { SidebarState, toggleCollapsed } from '../redux/store/features/sidebarSlice';
+import { UserState } from '../redux/store/features/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/store/hooks';
 
 const Sidebar: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState('');
-  const [userGroups, setUserGroups] = useState<string[]>([]);
+  /* ---------------------------------------- Gerenciamento de estado --------------------------------------- */
   const location = useLocation();
   const dispatch = useAppDispatch();
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [userName, setUserName] = useState('');
+  // const [userGroups, setUserGroups] = useState<string[]>([]);
   const { isCollapsed } = useAppSelector((state: { sidebar: SidebarState }) => state.sidebar);
+  const {
+    isLoggedIn,
+    fullName: userName,
+    groups: userGroups,
+  } = useAppSelector((state: { user: UserState }) => state.user);
 
   const toggleSidebar = () => {
     dispatch(toggleCollapsed());
@@ -21,9 +28,10 @@ const Sidebar: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    window.location.reload();
+    // window.location.reload();
   };
 
+  /* ------------------------------------- Gerenciamento de ciclo do app ------------------------------------ */
   useEffect(() => {
     const pills = document.querySelectorAll('.nav-link');
     pills.forEach((pill) => {
@@ -37,11 +45,11 @@ const Sidebar: React.FC = () => {
     }
   }, [location.pathname, userGroups]);
 
-  useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem('access_token'));
-    setUserName(localStorage.getItem('username') || '');
-    setUserGroups(localStorage.getItem('groups')?.split(',') || []);
-  }, []);
+  // useEffect(() => {
+  //   setIsLoggedIn(!!localStorage.getItem('access_token'));
+  //   setUserName(localStorage.getItem('username') || '');
+  //   setUserGroups(localStorage.getItem('groups')?.split(',') || []);
+  // }, []);
 
   const userLevels = {
     1: userGroups.some((group) => groupLevels[1].includes(group)),
@@ -61,6 +69,7 @@ const Sidebar: React.FC = () => {
     userLevels[4] && { label: 'Gestão', icon: 'bi bi-gear', href: '/management' },
   ];
 
+  /* ------------------------------------------------ Layout ------------------------------------------------ */
   return (
     <>
       <div className={`d-flex flex-column flex-shrink-0 p-3 text-bg-light sidebar ${isCollapsed ? 'collapsed' : ''}`}>
