@@ -1,6 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 
+import { useEffect } from 'react';
+import { initAuth } from './api/auth';
 import PrivateRoute from './api/PrivateRoute';
 import Sidebar from './components/sidebar';
 import { groupLevels } from './helpers/constants';
@@ -14,6 +16,11 @@ import ProductionLive from './pages/productionLive';
 import ShopFloor from './pages/sfm';
 
 function App() {
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    initAuth();
+  }, []);
+
   return (
     <>
       <main className="d-flex w-100">

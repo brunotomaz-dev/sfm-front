@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '../api/auth';
 import STMLogoPxB from '../assets/Login_pxb.png';
 import STMLogo from '../assets/Logo Santa Massa.png';
@@ -7,11 +7,13 @@ import { groupLevels } from '../helpers/constants';
 import { SidebarState, toggleCollapsed } from '../redux/store/features/sidebarSlice';
 import { UserState } from '../redux/store/features/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/store/hooks';
+import ChangePasswordModal from './changePasswordModal';
 
 const Sidebar: React.FC = () => {
   /* ---------------------------------------- Gerenciamento de estado --------------------------------------- */
   const location = useLocation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
   // const [userName, setUserName] = useState('');
   // const [userGroups, setUserGroups] = useState<string[]>([]);
@@ -21,6 +23,7 @@ const Sidebar: React.FC = () => {
     fullName: userName,
     groups: userGroups,
   } = useAppSelector((state: { user: UserState }) => state.user);
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   const toggleSidebar = () => {
     dispatch(toggleCollapsed());
@@ -28,7 +31,7 @@ const Sidebar: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    // window.location.reload();
+    navigate('/');
   };
 
   /* ------------------------------------- Gerenciamento de ciclo do app ------------------------------------ */
@@ -119,7 +122,14 @@ const Sidebar: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="#">
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowChangePassword(true);
+                    }}
+                  >
                     Alterar a Senha
                   </Link>
                 </li>
@@ -142,6 +152,7 @@ const Sidebar: React.FC = () => {
           </ul>
         </div>
       </div>
+      <ChangePasswordModal show={showChangePassword} onHide={() => setShowChangePassword(false)} />
     </>
   );
 };

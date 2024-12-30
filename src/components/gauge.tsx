@@ -12,6 +12,7 @@ interface GaugeProps {
 }
 
 const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, pos = 'up-center' }) => {
+  // Opções de cores do gauge conforme o indicador
   const optColor = {
     [IndicatorType.PERFORMANCE]: [
       [0.1, ColorsSTM.GREEN],
@@ -27,6 +28,7 @@ const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, pos = 'up-center' }
     ],
   };
 
+  // Opção de Altura do gauge
   const position_y = {
     top: '35%',
     bottom: '65%',
@@ -35,7 +37,16 @@ const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, pos = 'up-center' }
     'down-center': '55%',
   };
 
+  // Arredondar o valor de data para 2 casas decimais
+  data = Math.round(data * 100) / 100;
+
+  // Configurações do gauge
   const option = {
+    tooltip: {
+      formatter: '{b} : {c}%',
+      shadowColor: 'rgba(0, 0, 0, 0.5)',
+      shadowBlur: 10,
+    },
     series: [
       {
         title: {
