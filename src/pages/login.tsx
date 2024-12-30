@@ -2,12 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/auth';
 import stmLogo from '../assets/Logo Santa Massa.png';
-import { setUser } from '../redux/store/features/userSlice';
-import { useAppDispatch } from '../redux/store/hooks';
 
 const LoginPage = () => {
-  const dispatch = useAppDispatch();
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -16,14 +12,8 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       // Tenta logar
-      const { user_id } = await login(username, password);
-      // Se logar, recupera os dados do usuário do localStorage
-      const fullName = localStorage.getItem('username') || '';
-      const groups = localStorage.getItem('groups')?.split(',') || [];
-
-      // Salva os dados do usuário no estado do Redux
-      dispatch(setUser({ fullName, groups, user_id }));
-
+      await login(username, password);
+      // Vai para a pagina inicial
       navigate('/');
       // window.location.reload();
     } catch (error: unknown) {
