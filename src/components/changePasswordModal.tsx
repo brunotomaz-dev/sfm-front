@@ -25,7 +25,6 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ show, onHide 
 
     void (async () => {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         await changePassword(oldPassword, newPassword);
         onHide();
         alert('Senha alterada com sucesso!');
