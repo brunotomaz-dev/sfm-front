@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/auth';
 import stmLogo from '../assets/Logo Santa Massa.png';
+import { useAppSelector } from '../redux/store/hooks';
+import { RootState } from '../redux/store/store';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const isCollapsed = useAppSelector((state: RootState) => state.sidebar.isCollapsed);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +30,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <main className="d-flex align-itens-center py-4 w-100">
+      <main className={`d-flex align-itens-center py-4 w-100 main-content ${isCollapsed ? 'collapsed' : ''}`}>
         <section className="form-signin m-auto w-25">
           <form
             onSubmit={(e) => {
