@@ -11,7 +11,7 @@ interface GaugeProps {
   pos?: Position;
 }
 
-const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, pos = 'up-center' }) => {
+const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, large = false, pos = 'up-center' }) => {
   // Opções de cores do gauge conforme o indicador
   const optColor = {
     [IndicatorType.PERFORMANCE]: [
@@ -118,7 +118,9 @@ const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, pos = 'up-center' }
     ],
   };
 
-  return <ReactECharts option={option} style={{ height: '250%', width: '200%' }} opts={{ renderer: 'canvas' }} />;
+  const size = large ? { height: '250%', width: '200%' } : { height: '100%', width: '100%' };
+
+  return <ReactECharts option={option} style={size} opts={{ renderer: 'canvas' }} />;
 };
 
 export default GaugeChart;
