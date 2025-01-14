@@ -3,6 +3,7 @@ import { Card, Col, Row } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { getIndicator } from '../api/apiRequests';
 import GaugeChart from '../components/gauge';
+import HomeCartCountCart from '../components/home.cart_count';
 import HomeEstoqueCard from '../components/home.estoque';
 import HomeLinesCard from '../components/home.lines';
 import HomeProductionCard from '../components/home.production';
@@ -88,7 +89,7 @@ const Home: React.FC = () => {
           <Row className="mt-3">
             <Col>
               <HomeProductionCard />
-              <h1 className="border border-warning rounded p-2">Carrinhos</h1>
+              <HomeCartCountCart />
             </Col>
             <Col>
               <HomeLinesCard />

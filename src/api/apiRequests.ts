@@ -1,3 +1,4 @@
+import { iCartCount } from "../interfaces/Carrinhos.interface";
 import api from "./axiosConfig";
 
 interface iParams {
@@ -74,4 +75,17 @@ export const getEstoqueAtual = async () => {
     console.error("Erro ao buscar dados de estoque", error)
     throw error;
   }
+};
+
+export const getCarrinhosCount = async (data_inicial: string, data_final: string) => {
+try {
+  const period = `${data_inicial},${data_final}`;
+  const response = await api.get("api/cart_count/", {
+    params: { period }
+  });
+  return response.data.results as iCartCount[];
+} catch (error) {
+  console.error("Erro ao buscar contagem de carrinhos", error);
+  throw error;
+}
 };
