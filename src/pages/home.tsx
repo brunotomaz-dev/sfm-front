@@ -66,19 +66,14 @@ const Home: React.FC = () => {
               <Card className="bg-transparent shadow border-0 p-2 pb-4">
                 <h4 className="card-title text-center p-2">Indicadores de eficiência</h4>
                 <div className="d-flex flex-row justify-content-center align-items-center">
-                  <GaugeChart
-                    indicator={IndicatorType.EFFICIENCY}
-                    data={eficienciaMedia * 100}
-                    large={true}
-                    pos="up-center"
-                  />
+                  <GaugeChart indicator={IndicatorType.EFFICIENCY} data={eficienciaMedia * 100} large pos="up-center" />
                   <GaugeChart
                     indicator={IndicatorType.PERFORMANCE}
                     data={performanceMedia * 100}
-                    large={true}
+                    large
                     pos="down-center"
                   />
-                  <GaugeChart indicator={IndicatorType.REPAIR} data={repairsMedia * 100} large={true} pos="up-center" />
+                  <GaugeChart indicator={IndicatorType.REPAIR} data={repairsMedia * 100} large pos="up-center" />
                 </div>
               </Card>
             </Col>

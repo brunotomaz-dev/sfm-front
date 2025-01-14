@@ -111,14 +111,14 @@ const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, large = false, pos 
         data: [
           {
             value: data,
-            name: indicator,
+            name: indicator === IndicatorType.EFFICIENCY ? 'EFICIÊNCIA' : indicator.toUpperCase(),
           },
         ],
       },
     ],
   };
 
-  const size = large ? { height: '250%', width: '200%' } : { height: '100%', width: '100%' };
+  const size = large ? { height: '250%', width: '200%' } : { height: '200%', width: '100%' };
 
   return <ReactECharts option={option} style={size} opts={{ renderer: 'canvas' }} />;
 };

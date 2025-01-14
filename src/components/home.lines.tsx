@@ -29,7 +29,7 @@ const HomeLinesCard: React.FC = () => {
             maquina_id: curr.maquina_id,
             linha: lineMachine[curr.maquina_id] ?? 0,
             status: curr.status === 'true' ? 'Rodando' : 'Parada',
-            produto: curr.produto,
+            produto: curr.produto.trim(),
           };
         }
         return acc;
