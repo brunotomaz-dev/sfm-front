@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
 import { getIndicator } from '../api/apiRequests';
 import GaugeChart from '../components/gauge';
+import HomeCartCountCart from '../components/home.cart_count';
+import HomeEstoqueCard from '../components/home.estoque';
+import HomeLinesCard from '../components/home.lines';
+import HomeProductionCard from '../components/home.production';
 import { IndicatorType } from '../helpers/constants';
 import { iEficiencia, iPerformance, iRepair } from '../interfaces/Indicators.interfaces';
+import { setLineMachine } from '../redux/store/features/homeSlice';
 import { useAppSelector } from '../redux/store/hooks';
+import { RootState } from '../redux/store/store';
 
 //cSpell: words eficiencia
 
 const Home: React.FC = () => {
-  const { fullName } = useAppSelector((state: { user: { fullName: string } }) => state.user);
+  const dispatch = useDispatch();
+  const fullName = useAppSelector((state: RootState) => state.user.fullName);
+  const isCollapsed = useAppSelector((state: RootState) => state.sidebar.isCollapsed);
   const [eficiencia, setEficiencia] = useState<iEficiencia[]>([]);
   const [performance, setPerformance] = useState<iPerformance[]>([]);
   const [repairs, setRepairs] = useState<iRepair[]>([]);
@@ -36,15 +45,24 @@ const Home: React.FC = () => {
     void getIndicator('repair', nowDate).then((data: iRepair[]) => setRepairs(data));
   }, [nowDate]);
 
+  useEffect(() => {
+    const lineMachine = eficiencia.reduce<Record<string, number>>((acc, curr) => {
+      acc[curr.maquina_id] = curr.linha;
+      return acc;
+    }, {});
+
+    dispatch(setLineMachine(lineMachine));
+  }, [eficiencia, dispatch]);
+
   return (
     <>
-      <main className="p-2 w-100">
+      <main className={`p-2 w-100 main-content ${isCollapsed ? 'collapsed' : ''}`}>
         <h3>Olá, {fullName}</h3>
         <p>Seja bem-vindo ao sistema de gestão de produção da Santa Massa</p>
         <h1 className="text-center p-2">Dados do dia</h1>
         <section className="container-fluid">
           <Row className="row">
-            <Col>
+            <Col className="col-7">
               <Card className="bg-transparent shadow border-0 p-2 pb-4">
                 <h4 className="card-title text-center p-2">Indicadores de eficiência</h4>
                 <div className="d-flex flex-row justify-content-center align-items-center">
@@ -70,14 +88,14 @@ const Home: React.FC = () => {
           </Row>
           <Row className="mt-3">
             <Col>
-              <h1 className="border border-info rounded p-2">Produção</h1>
-              <h1 className="border border-warning rounded p-2">Carrinhos</h1>
+              <HomeProductionCard />
+              <HomeCartCountCart />
             </Col>
             <Col>
-              <h1 className="border border-success rounded p-2">Linhas Rodando</h1>
+              <HomeLinesCard />
             </Col>
             <Col>
-              <h1 className="border border-danger rounded p-2">Estoque</h1>
+              <HomeEstoqueCard />
             </Col>
           </Row>
         </section>

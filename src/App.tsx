@@ -17,13 +17,12 @@ import ShopFloor from './pages/sfm';
 
 function App() {
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     initAuth();
   }, []);
 
   return (
     <>
-      <main className="d-flex w-100">
+      <main className="w-100 d-flex">
         <Sidebar />
         <Routes>
           <Route path="/" element={<Home />} />

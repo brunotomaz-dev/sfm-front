@@ -53,10 +53,8 @@ const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, pos = 'up-center' }
           offsetCenter: [0, '110%'],
           fontSize: 20,
           color: 'auto',
-          textStyle: {
-            fontWeight: 'bold',
-            fontFamily: 'Poppins',
-          },
+          fontWeight: 'bold',
+          fontFamily: 'Poppins',
         },
         type: 'gauge',
         startAngle: 220,
