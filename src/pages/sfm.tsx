@@ -1,83 +1,199 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
+import { getIndicator } from '../api/apiRequests';
 import GaugeChart from '../components/gauge';
 import { IndicatorType } from '../helpers/constants';
 import { useAppSelector } from '../redux/store/hooks';
 import { RootState } from '../redux/store/store';
 
-const ShopFloor: React.FC = () => {
-  const isCollapsed = useAppSelector((state: RootState) => state.sidebar.isCollapsed);
-  // NOTE: Remover a função temporária após a implementação da API
-  // Função temporária que gera um número aleatório entre 0 e 100 a cada 10 segundos
-  const [randomIndicator, setRandomIndicator] = useState<number>(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const random = Math.floor(Math.random() * 100);
-      setRandomIndicator(random);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
+interface iEff {
+  data_registro: string;
+  eficiencia: number;
+}
 
+interface iRep {
+  data_registro: string;
+  reparo: number;
+}
+
+interface iPerf {
+  data_registro: string;
+  performance: number;
+}
+
+const ShopFloor: React.FC = () => {
+  /* --------------------------------------- Recuperar dados do redux --------------------------------------- */
+  const isCollapsed = useAppSelector((state: RootState) => state.sidebar.isCollapsed);
+
+  /* ------------------------------------------ Inicia estado local ----------------------------------------- */
+  const [lastEfficiency, setLastEfficiency] = useState<number>(0);
+  const [lastPerformance, setLastPerformance] = useState<number>(0);
+  const [lastRepairs, setLastRepairs] = useState<number>(0);
+  const [currentEfficiency, setCurrentEfficiency] = useState<number>(0);
+  const [currentPerformance, setCurrentPerformance] = useState<number>(0);
+  const [currentRepairs, setCurrentRepairs] = useState<number>(0);
+
+  /* ------------------------------------------- Encontra as datas ------------------------------------------ */
+  // Encontrar a data de hoje, primeiro dia do mês passado e ultimo dia do mês passado
+  const now = new Date();
+  const firstDateOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const firstDateOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const finalDayOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+  // Ajustar para o formato yyyy-mm-dd
+  const currentMonthBeginningDateString = firstDateOfCurrentMonth.toISOString().split('T')[0];
+  const lastMonthFirstDateString = firstDateOfLastMonth.toISOString().split('T')[0];
+  const lastMonthFinalDateString = finalDayOfLastMonth.toISOString().split('T')[0];
+
+  /* ---------------------------------------------- Requisições --------------------------------------------- */
+  useEffect(() => {
+    // Requisita o indicador de eficiencia
+    void getIndicator(
+      IndicatorType.EFFICIENCY,
+      [lastMonthFirstDateString, lastMonthFinalDateString],
+      ['data_registro', 'eficiencia']
+    ).then((data: iEff[]) => {
+      // Remover onde a eficiencia é 0
+      data = data.filter((item) => item.eficiencia > 0);
+      // Obter a média de eficiencia
+      const average = data.reduce((acc, curr): number => acc + curr.eficiencia, 0) / data.length;
+      setLastEfficiency(average * 100);
+    });
+
+    // Requisita o indicador de performance
+    void getIndicator(
+      IndicatorType.PERFORMANCE,
+      [lastMonthFirstDateString, lastMonthFinalDateString],
+      ['data_registro', 'performance']
+    ).then((data: iPerf[]) => {
+      // Obter a média de performance
+      const average = data.reduce((acc, curr): number => acc + curr.performance, 0) / data.length;
+      setLastPerformance(average * 100);
+    });
+
+    // Requisita o indicador de reparo
+    void getIndicator('repair', [lastMonthFirstDateString, lastMonthFinalDateString], ['data_registro', 'reparo']).then(
+      (data: iRep[]) => {
+        // Obter a média de reparo
+        const average = data.reduce((acc, curr): number => acc + curr.reparo, 0) / data.length;
+        setLastRepairs(average * 100);
+      }
+    );
+  }, [lastMonthFirstDateString, lastMonthFinalDateString]);
+
+  // Requisitar os indicadores de eficiencia, performance e reparo do mês atual
+  useEffect(() => {
+    // Indicador de eficiencia
+    void getIndicator(
+      IndicatorType.EFFICIENCY,
+      [currentMonthBeginningDateString],
+      ['data_registro', 'eficiencia']
+    ).then((data: iEff[]) => {
+      // Remover onde a eficiencia é 0
+      data = data.filter((item) => item.eficiencia > 0);
+      // Obter a média de eficiencia
+      const average = data.reduce((acc, curr): number => acc + curr.eficiencia, 0) / data.length;
+      setCurrentEfficiency(average * 100);
+    });
+
+    // Indicador de performance
+    void getIndicator(
+      IndicatorType.PERFORMANCE,
+      [currentMonthBeginningDateString],
+      ['data_registro', 'performance']
+    ).then((data: iPerf[]) => {
+      // Obter a média de performance
+      const average = data.reduce((acc, curr): number => acc + curr.performance, 0) / data.length;
+      setCurrentPerformance(average * 100);
+    });
+
+    // Indicador de reparo
+    void getIndicator('repair', [currentMonthBeginningDateString], ['data_registro', 'reparo']).then((data: iRep[]) => {
+      // Obter a média de reparo
+      const average = data.reduce((acc, curr): number => acc + curr.reparo, 0) / data.length;
+      setCurrentRepairs(average * 100);
+    });
+  }, [currentMonthBeginningDateString]);
+
+  /* ------------------------------------------------ Layout ------------------------------------------------ */
   return (
     <main className={`p-2 w-100 main-content ${isCollapsed ? 'collapsed' : ''}`}>
       <h1 className="text-center">Shop Floor Management</h1>
       <section>
-        <Row>
-          <h3 className="text-center">Eficiência</h3>
-          <Col>
-            <Card className="shadow bg-transparent border-0 p-3 mb-2">
-              <div>
-                <GaugeChart indicator={IndicatorType.EFFICIENCY} data={randomIndicator} />
-              </div>
-            </Card>
-          </Col>
-          <Col className="col-8">
-            <Card className="shadow bg-transparent border-0 p-3 mb-2">
-              <p>Heatmap</p>
-            </Card>
-          </Col>
-          <Col>
-            <Card className="shadow bg-transparent border-0 p-3 mb-2">
-              <p>Gauge Hoje</p>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <h2>Performance</h2>
-          <Col>
-            <Card className="shadow bg-transparent border-0 p-3 mb-2">
-              <p>Gauge Passado</p>
-            </Card>
-          </Col>
-          <Col className="col-7">
-            <Card className="shadow bg-transparent border-0 p-3 mb-2">
-              <p>Heatmap</p>
-            </Card>
-          </Col>
-          <Col>
-            <Card className="shadow bg-transparent border-0 p-3 mb-2">
-              <p>Gauge Hoje</p>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <h2>Reparos</h2>
-          <Col>
-            <Card className="shadow bg-transparent border-0 p-3 mb-2">
-              <p>Gauge Passado</p>
-            </Card>
-          </Col>
-          <Col className="col-7">
-            <Card className="shadow bg-transparent border-0 p-3 mb-2">
-              <p>Heatmap</p>
-            </Card>
-          </Col>
-          <Col>
-            <Card className="shadow bg-transparent border-0 p-3 mb-2">
-              <p>Gauge Hoje</p>
-            </Card>
-          </Col>
-        </Row>
+        <Card className="shadow bg-transparent border-0 p-3 mb-2">
+          <Row>
+            <h3 className="text-center">Eficiência</h3>
+            <Col className="col-2">
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <p className="text-center">Mês Anterior</p>
+                <GaugeChart indicator={IndicatorType.EFFICIENCY} data={lastEfficiency} />
+              </Card>
+            </Col>
+            <Col className="col-8">
+              <Card className="bg-transparent border-2 p-3 mb-2">
+                <p>Heatmap</p>
+              </Card>
+              <Card className="bg-transparent border-2 p-3 mb-2">
+                <p>Line Chart</p>
+              </Card>
+            </Col>
+            <Col className="col-2">
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <p className="text-center">Mês Atual</p>
+                <GaugeChart indicator={IndicatorType.EFFICIENCY} data={currentEfficiency} />
+              </Card>
+            </Col>
+          </Row>
+        </Card>
+        <Card className="shadow bg-transparent border-0 p-3 mb-2">
+          <Row>
+            <h3 className="text-center">Performance</h3>
+            <Col className="col-2">
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <p className="text-center">Mês Anterior</p>
+                <GaugeChart indicator={IndicatorType.PERFORMANCE} data={lastPerformance} />
+              </Card>
+            </Col>
+            <Col className="col-8">
+              <Card className="bg-transparent border-2 p-3 mb-2">
+                <p>Heatmap</p>
+              </Card>
+              <Card className="bg-transparent border-2 p-3 mb-2">
+                <p>Line Chart</p>
+              </Card>
+            </Col>
+            <Col className="col-2">
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <p className="text-center">Mês Atual</p>
+                <GaugeChart indicator={IndicatorType.PERFORMANCE} data={currentPerformance} />
+              </Card>
+            </Col>
+          </Row>
+        </Card>
+        <Card className="shadow bg-transparent border-0 p-3 mb-2">
+          <Row>
+            <h3 className="text-center">Reparos</h3>
+            <Col className="col-2">
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <p className="text-center">Mês Anterior</p>
+                <GaugeChart indicator={IndicatorType.REPAIR} data={lastRepairs} />
+              </Card>
+            </Col>
+            <Col className="col-8">
+              <Card className="bg-transparent border-2 p-3 mb-2">
+                <p>Heatmap</p>
+              </Card>
+              <Card className="bg-transparent border-2 p-3 mb-2">
+                <p>Line Chart</p>
+              </Card>
+            </Col>
+            <Col className="col-2">
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <p className="text-center">Mês Atual</p>
+                <GaugeChart indicator={IndicatorType.REPAIR} data={currentRepairs} />
+              </Card>
+            </Col>
+          </Row>
+        </Card>
       </section>
     </main>
   );
