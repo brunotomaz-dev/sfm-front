@@ -42,6 +42,9 @@ const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, large = false, pos 
 
   // Configurações do gauge
   const option = {
+    textStyle: {
+      fontFamily: 'Poppins',
+    },
     tooltip: {
       formatter: '{b} : {c}%',
       shadowColor: 'rgba(0, 0, 0, 0.5)',

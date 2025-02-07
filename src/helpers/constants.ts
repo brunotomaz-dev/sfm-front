@@ -17,9 +17,21 @@ export enum IndicatorType {
   EFFICIENCY = 'eficiencia'
 }
 
+export enum RecheioMeta {
+  PERFORMANCE = 4,
+  REPAIR = 4,
+  EFFICIENCY = 90
+}
+
 export enum ColorsSTM {
   RED = "#E30613",
   LIGHT_GREY = "#E3E3E3",
   YELLOW = "#FFDD00",
   GREEN = "#00A13A"
 }
+
+export const TurnosObj = [
+  { id: 1, name: 'Matutino', turno: 'MAT' },
+  { id: 2, name: 'Vespertino', turno: 'VES' },
+  { id: 3, name: 'Noturno', turno: 'NOT' },
+] 

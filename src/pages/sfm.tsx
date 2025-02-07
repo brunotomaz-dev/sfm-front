@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import { getIndicator } from '../api/apiRequests';
 import GaugeChart from '../components/gauge';
-import { IndicatorType } from '../helpers/constants';
+import Heatmap from '../components/sfm.heatmap';
+import { IndicatorType, RecheioMeta } from '../helpers/constants';
 import { useAppSelector } from '../redux/store/hooks';
 import { RootState } from '../redux/store/store';
 
@@ -121,7 +122,8 @@ const ShopFloor: React.FC = () => {
       <section>
         <Card className="shadow bg-transparent border-0 p-3 mb-2">
           <Row>
-            <h3 className="text-center">Eficiência</h3>
+            {/*eslint-disable-next-line @typescript-eslint/no-unsafe-member-access*/}
+            <h3 className="text-center">Eficiência - {RecheioMeta.EFFICIENCY}%</h3>
             <Col className="col-2">
               <Card className="bg-transparent border-0 p-3 mb-2">
                 <p className="text-center">Mês Anterior</p>
@@ -129,8 +131,8 @@ const ShopFloor: React.FC = () => {
               </Card>
             </Col>
             <Col className="col-8">
-              <Card className="bg-transparent border-2 p-3 mb-2">
-                <p>Heatmap</p>
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <Heatmap indicator={IndicatorType.EFFICIENCY} />
               </Card>
               <Card className="bg-transparent border-2 p-3 mb-2">
                 <p>Line Chart</p>
@@ -146,7 +148,8 @@ const ShopFloor: React.FC = () => {
         </Card>
         <Card className="shadow bg-transparent border-0 p-3 mb-2">
           <Row>
-            <h3 className="text-center">Performance</h3>
+            {/*eslint-disable-next-line @typescript-eslint/no-unsafe-member-access*/}
+            <h3 className="text-center">Performance - {RecheioMeta.PERFORMANCE}%</h3>
             <Col className="col-2">
               <Card className="bg-transparent border-0 p-3 mb-2">
                 <p className="text-center">Mês Anterior</p>
@@ -154,8 +157,8 @@ const ShopFloor: React.FC = () => {
               </Card>
             </Col>
             <Col className="col-8">
-              <Card className="bg-transparent border-2 p-3 mb-2">
-                <p>Heatmap</p>
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <Heatmap indicator={IndicatorType.PERFORMANCE} />
               </Card>
               <Card className="bg-transparent border-2 p-3 mb-2">
                 <p>Line Chart</p>
@@ -171,7 +174,8 @@ const ShopFloor: React.FC = () => {
         </Card>
         <Card className="shadow bg-transparent border-0 p-3 mb-2">
           <Row>
-            <h3 className="text-center">Reparos</h3>
+            {/*eslint-disable-next-line @typescript-eslint/no-unsafe-member-access*/}
+            <h3 className="text-center">Reparos - {RecheioMeta.REPAIR}%</h3>
             <Col className="col-2">
               <Card className="bg-transparent border-0 p-3 mb-2">
                 <p className="text-center">Mês Anterior</p>
@@ -179,8 +183,8 @@ const ShopFloor: React.FC = () => {
               </Card>
             </Col>
             <Col className="col-8">
-              <Card className="bg-transparent border-2 p-3 mb-2">
-                <p>Heatmap</p>
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <Heatmap indicator={IndicatorType.REPAIR} />
               </Card>
               <Card className="bg-transparent border-2 p-3 mb-2">
                 <p>Line Chart</p>
