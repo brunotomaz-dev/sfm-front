@@ -5,7 +5,6 @@ export function heatmapAdjust(data: iInd[], indicator: string): iHeatmapData {
   
   // Filtrar as datas distintas
   const realDates = [...new Set(data.map((item) => item.data_registro))];
-  console.log(data)
 
   // Criar um array com todas as datas do mês atual formato string 'DD' (01, 02)
   const allDates = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();

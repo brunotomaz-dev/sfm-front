@@ -3,6 +3,7 @@ import { Card, Col, Row } from 'react-bootstrap';
 import { getIndicator } from '../api/apiRequests';
 import GaugeChart from '../components/gauge';
 import Heatmap from '../components/sfm.heatmap';
+import LineSFM from '../components/sfm.line';
 import { IndicatorType, RecheioMeta } from '../helpers/constants';
 import { useAppSelector } from '../redux/store/hooks';
 import { RootState } from '../redux/store/store';
@@ -134,8 +135,8 @@ const ShopFloor: React.FC = () => {
               <Card className="bg-transparent border-0 p-3 mb-2">
                 <Heatmap indicator={IndicatorType.EFFICIENCY} />
               </Card>
-              <Card className="bg-transparent border-2 p-3 mb-2">
-                <p>Line Chart</p>
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <LineSFM indicator={IndicatorType.EFFICIENCY} />
               </Card>
             </Col>
             <Col className="col-2">
@@ -160,8 +161,8 @@ const ShopFloor: React.FC = () => {
               <Card className="bg-transparent border-0 p-3 mb-2">
                 <Heatmap indicator={IndicatorType.PERFORMANCE} />
               </Card>
-              <Card className="bg-transparent border-2 p-3 mb-2">
-                <p>Line Chart</p>
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <LineSFM indicator={IndicatorType.PERFORMANCE} />
               </Card>
             </Col>
             <Col className="col-2">
@@ -186,8 +187,8 @@ const ShopFloor: React.FC = () => {
               <Card className="bg-transparent border-0 p-3 mb-2">
                 <Heatmap indicator={IndicatorType.REPAIR} />
               </Card>
-              <Card className="bg-transparent border-2 p-3 mb-2">
-                <p>Line Chart</p>
+              <Card className="bg-transparent border-0 p-3 mb-2">
+                <LineSFM indicator={IndicatorType.REPAIR} />
               </Card>
             </Col>
             <Col className="col-2">
