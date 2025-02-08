@@ -7,11 +7,12 @@ interface iParams {
   maquina_id?: string;
 }
 
-export const getIndicator = async (indicator: string, data: string | string[]) => {
+export const getIndicator = async (indicator: string, data: string | string[], fields?: string[]) => {
+  const dateFilter = Array.isArray(data) && data.length > 1 ? { data_registro__gte: data[0], data_registro__lte: data[1] } : { data_registro__gte: data[0] };
   // Define os parâmetros caso a data possua 2 valores
   const params = Array.isArray(data)
-    ? { data_registro__gt: data[0], data_registro__lt: data[1] }
-    : { data_registro: data };
+    ? { ...dateFilter, ...fields && { fields: fields.join(",") } }
+    : { data_registro: data, ...fields && { fields: fields.join(",") } };
   
   try {
     const response = await api.get(`api/${indicator}/`, {params: params});
@@ -23,9 +24,10 @@ export const getIndicator = async (indicator: string, data: string | string[]) =
 };
 
 export const getProduction = async (data: string | string[]) => {
+  const dateFilter = Array.isArray(data) && data.length > 1 ? { data_registro__gte: data[0], data_registro__lte: data[1] } : { data_registro__gte: data[0] };
   // Define os parâmetros caso a data possua 2 valores
   const params = Array.isArray(data)
-    ? { data_registro__gt: data[0], data_registro__lt: data[1] }
+    ? { ...dateFilter }
     : { data_registro: data };
 
   try {
@@ -38,9 +40,10 @@ export const getProduction = async (data: string | string[]) => {
 };
 
 export const getInfoIHM = async (data: string | string[]) => {
+  const dateFilter = Array.isArray(data) && data.length > 1 ? { data_registro__gte: data[0], data_registro__lte: data[1] } : { data_registro__gte: data[0] };
   // Define os parâmetros caso a data possua 2 valores
   const params = Array.isArray(data)
-    ? { data_registro__gt: data[0], data_registro__lt: data[1] }
+    ? { ...dateFilter }
     : { data_registro: data };
 
   try {
@@ -53,9 +56,10 @@ export const getInfoIHM = async (data: string | string[]) => {
 };
 
 export const getMaquinaInfo = async ({data, turno, maquina_id}: iParams) => {
+  const dateFilter = Array.isArray(data) && data.length > 1 ? { data_registro__gte: data[0], data_registro__lte: data[1] } : { data_registro__gte: data[0] };
   // Define os parâmetros caso a data possua 2 valores
   const params = Array.isArray(data)
-    ? { data_registro__gt: data[0], data_registro__lt: data[1], ...maquina_id && { maquina_id }, ...turno && { turno } }
+    ? { ...dateFilter, ...maquina_id && { maquina_id }, ...turno && { turno } }
     : { data_registro: data, ...maquina_id && { maquina_id }, ...turno && { turno } };
 
   try {

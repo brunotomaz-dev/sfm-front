@@ -111,7 +111,7 @@ const Sidebar: React.FC = () => {
             aria-expanded="false"
           >
             <img src={STMLogoPxB} alt="" width="32" height="32" className="rounded-circle me-2"></img>
-            {!isCollapsed && <strong>{userName}</strong>}
+            {!isCollapsed && <strong>{userName.length > 0 ? userName : 'Entrar'}</strong>}
           </Link>
           <ul className="dropdown-menu dropdown-menu-light text-small shadow">
             {isLoggedIn ? (

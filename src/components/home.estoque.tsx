@@ -29,7 +29,7 @@ const HomeEstoqueCard: React.FC = () => {
           <tbody>
             {estoque.map(({ produto, quantidade }) => (
               <tr key={produto}>
-                <td>{produto}</td>
+                <td>{produto.trim()}</td>
                 <td className="text-end">{quantidade.toLocaleString('pt-BR')}</td>
               </tr>
             ))}

@@ -3,7 +3,7 @@ import { Card, Col, Row } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { getIndicator } from '../api/apiRequests';
 import GaugeChart from '../components/gauge';
-import HomeCartCountCart from '../components/home.cart_count';
+import HomeCartCountCart from '../components/home.cartCount';
 import HomeEstoqueCard from '../components/home.estoque';
 import HomeLinesCard from '../components/home.lines';
 import HomeProductionCard from '../components/home.production';
@@ -40,7 +40,9 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     // Faz a requisição do indicador e salva no estado
-    void getIndicator('eficiencia', nowDate).then((data: iEficiencia[]) => setEficiencia(data));
+    void getIndicator('eficiencia', nowDate).then((data: iEficiencia[]) =>
+      setEficiencia(data.filter((item) => item.eficiencia > 0))
+    );
     void getIndicator('performance', nowDate).then((data: iPerformance[]) => setPerformance(data));
     void getIndicator('repair', nowDate).then((data: iRepair[]) => setRepairs(data));
   }, [nowDate]);
@@ -66,19 +68,14 @@ const Home: React.FC = () => {
               <Card className="bg-transparent shadow border-0 p-2 pb-4">
                 <h4 className="card-title text-center p-2">Indicadores de eficiência</h4>
                 <div className="d-flex flex-row justify-content-center align-items-center">
-                  <GaugeChart
-                    indicator={IndicatorType.EFFICIENCY}
-                    data={eficienciaMedia * 100}
-                    large={true}
-                    pos="up-center"
-                  />
+                  <GaugeChart indicator={IndicatorType.EFFICIENCY} data={eficienciaMedia * 100} large pos="up-center" />
                   <GaugeChart
                     indicator={IndicatorType.PERFORMANCE}
                     data={performanceMedia * 100}
-                    large={true}
+                    large
                     pos="down-center"
                   />
-                  <GaugeChart indicator={IndicatorType.REPAIR} data={repairsMedia * 100} large={true} pos="up-center" />
+                  <GaugeChart indicator={IndicatorType.REPAIR} data={repairsMedia * 100} large pos="up-center" />
                 </div>
               </Card>
             </Col>
