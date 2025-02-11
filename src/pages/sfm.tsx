@@ -123,7 +123,6 @@ const ShopFloor: React.FC = () => {
       <section>
         <Card className="shadow bg-transparent border-0 p-3 mb-2">
           <Row>
-            {/*eslint-disable-next-line @typescript-eslint/no-unsafe-member-access*/}
             <h3 className="text-center">Eficiência - {RecheioMeta.EFFICIENCY}%</h3>
             <Col className="col-2">
               <Card className="bg-transparent border-0 p-3 mb-2">
@@ -149,7 +148,6 @@ const ShopFloor: React.FC = () => {
         </Card>
         <Card className="shadow bg-transparent border-0 p-3 mb-2">
           <Row>
-            {/*eslint-disable-next-line @typescript-eslint/no-unsafe-member-access*/}
             <h3 className="text-center">Performance - {RecheioMeta.PERFORMANCE}%</h3>
             <Col className="col-2">
               <Card className="bg-transparent border-0 p-3 mb-2">
@@ -175,7 +173,6 @@ const ShopFloor: React.FC = () => {
         </Card>
         <Card className="shadow bg-transparent border-0 p-3 mb-2">
           <Row>
-            {/*eslint-disable-next-line @typescript-eslint/no-unsafe-member-access*/}
             <h3 className="text-center">Reparos - {RecheioMeta.REPAIR}%</h3>
             <Col className="col-2">
               <Card className="bg-transparent border-0 p-3 mb-2">

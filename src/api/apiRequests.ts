@@ -93,3 +93,15 @@ try {
   throw error;
 }
 };
+
+export const getHourProduction = async (data: string) => {
+  try {
+    const response = await api.get("api/maq_info_hour_prod/", {
+      params: { data_registro: data }
+    });
+    return response.data
+  } catch (error) {
+    console.error("Erro ao buscar produção por hora", error)
+    throw error;
+  }
+};

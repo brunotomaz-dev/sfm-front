@@ -77,7 +77,6 @@ const Heatmap: React.FC<iHeatmapProps> = ({ indicator }) => {
   useEffect(() => {
     if (indicatorData.length > 0) {
       const processedData = processData;
-      console.log(heatmapAdjust(processedData, indicator));
       setHeatmapData(heatmapAdjust(processedData, indicator));
     }
   }, [indicatorData, indicator, processData]);

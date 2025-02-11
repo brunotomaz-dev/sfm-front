@@ -40,21 +40,20 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     // Faz a requisição do indicador e salva no estado
-    void getIndicator('eficiencia', nowDate).then((data: iEficiencia[]) =>
-      setEficiencia(data.filter((item) => item.eficiencia > 0))
-    );
+    void getIndicator('eficiencia', nowDate).then((data: iEficiencia[]) => {
+      dispatch(
+        setLineMachine(
+          data.reduce<Record<string, number>>((acc, curr) => {
+            acc[curr.maquina_id] = curr.linha;
+            return acc;
+          }, {})
+        )
+      );
+      setEficiencia(data.filter((item) => item.eficiencia > 0));
+    });
     void getIndicator('performance', nowDate).then((data: iPerformance[]) => setPerformance(data));
     void getIndicator('repair', nowDate).then((data: iRepair[]) => setRepairs(data));
-  }, [nowDate]);
-
-  useEffect(() => {
-    const lineMachine = eficiencia.reduce<Record<string, number>>((acc, curr) => {
-      acc[curr.maquina_id] = curr.linha;
-      return acc;
-    }, {});
-
-    dispatch(setLineMachine(lineMachine));
-  }, [eficiencia, dispatch]);
+  }, [nowDate, dispatch]);
 
   return (
     <>
