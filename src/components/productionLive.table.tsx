@@ -42,7 +42,7 @@ const ProductionLiveTable: React.FC<ProductionTableProps> = ({ data }) => {
       const row: TableRow = { intervalo: interval };
       lines.forEach((line) => {
         const production = regularData.find((item) => item.intervalo === interval && item.linha === line);
-        row[`linha${line}`] = production ? production.total : '-';
+        row[`linha${line}`] = production?.total === 0 ? '-' : production ? production.total : '-';
       });
       return row;
     }),
@@ -51,7 +51,7 @@ const ProductionLiveTable: React.FC<ProductionTableProps> = ({ data }) => {
       intervalo: 'Total',
       ...lines.reduce((acc, line) => {
         const total = totalsData.find((item) => item.linha === line);
-        return { ...acc, [`linha${line}`]: total ? total.total : '-' };
+        return { ...acc, [`linha${line}`]: total?.total === 0 ? '-' : total ? total.total : '-' };
       }, {}),
     },
   ];
