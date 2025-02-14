@@ -1,3 +1,4 @@
+import { format, startOfDay } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Table } from 'react-bootstrap';
 import { getProduction } from '../api/apiRequests';
@@ -9,8 +10,8 @@ const HomeProductionCard: React.FC = () => {
   // Com production, soma o total_produzido para cada produto
 
   // Recuperar a data de hoje
-  const now = new Date();
-  const nowDate = now.toISOString().split('T')[0];
+  const now = startOfDay(new Date());
+  const nowDate = format(now, 'yyyy-MM-dd');
 
   useEffect(() => {
     void getProduction(nowDate).then((data: iProduction[]) => {

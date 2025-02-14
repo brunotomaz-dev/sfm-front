@@ -1,3 +1,4 @@
+import { format, startOfDay } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Table } from 'react-bootstrap';
 import { getCarrinhosCount } from '../api/apiRequests';
@@ -5,11 +6,11 @@ import { iCartCount } from '../interfaces/Carrinhos.interface';
 
 const HomeCartCountCart: React.FC = () => {
   // Encontrar primeiro dia do mês
-  const now = new Date();
+  const now = startOfDay(new Date());
   const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-  const firstDayString = firstDay.toISOString().split('T')[0];
+  const firstDayString = format(firstDay, 'yyyy-MM-dd');
   // Ajustar o dia atual para o formato yyyy-mm-dd
-  const nowString = now.toISOString().split('T')[0];
+  const nowString = format(now, 'yyyy-MM-dd');
 
   //Inicializar estado local
   const [cartCount, setCartCount] = useState<iCartCount[]>([]);

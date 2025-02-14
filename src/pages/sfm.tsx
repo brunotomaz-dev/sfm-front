@@ -1,3 +1,4 @@
+import { format, startOfDay } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import { getIndicator } from '../api/apiRequests';
@@ -37,14 +38,14 @@ const ShopFloor: React.FC = () => {
 
   /* ------------------------------------------- Encontra as datas ------------------------------------------ */
   // Encontrar a data de hoje, primeiro dia do mês passado e ultimo dia do mês passado
-  const now = new Date();
+  const now = startOfDay(new Date());
   const firstDateOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const firstDateOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const finalDayOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
   // Ajustar para o formato yyyy-mm-dd
-  const currentMonthBeginningDateString = firstDateOfCurrentMonth.toISOString().split('T')[0];
-  const lastMonthFirstDateString = firstDateOfLastMonth.toISOString().split('T')[0];
-  const lastMonthFinalDateString = finalDayOfLastMonth.toISOString().split('T')[0];
+  const currentMonthBeginningDateString = format(firstDateOfCurrentMonth, 'yyyy-MM-dd');
+  const lastMonthFirstDateString = format(firstDateOfLastMonth, 'yyyy-MM-dd');
+  const lastMonthFinalDateString = format(finalDayOfLastMonth, 'yyyy-MM-dd');
 
   /* ---------------------------------------------- Requisições --------------------------------------------- */
   useEffect(() => {

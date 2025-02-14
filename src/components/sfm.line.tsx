@@ -1,3 +1,4 @@
+import { format, startOfDay } from 'date-fns';
 import EChartsReact from 'echarts-for-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { getIndicator } from '../api/apiRequests';
@@ -14,9 +15,9 @@ interface iLineData {
 
 const LineSFM: React.FC<iLineProps> = ({ indicator }) => {
   // Data inicial
-  const now = new Date();
+  const now = startOfDay(new Date());
   const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-  const firstDayString = firstDay.toISOString().split('T')[0];
+  const firstDayString = format(firstDay, 'yyyy-MM-dd');
 
   /* --------------------------------------------- Estado local --------------------------------------------- */
   const [DBData, setDBData] = useState<iLineData[]>([]);

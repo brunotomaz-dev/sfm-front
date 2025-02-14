@@ -99,9 +99,22 @@ export const getHourProduction = async (data: string) => {
     const response = await api.get("api/maq_info_hour_prod/", {
       params: { data_registro: data }
     });
-    return response.data
-  } catch (error) {
-    console.error("Erro ao buscar produção por hora", error)
-    throw error;
+
+    // Verifica se a resposta foi bem sucedida e tem dados
+    if (response.status === 200 && response.data) {
+      return response.data;
+    }
+
+    throw new Error("Não há dados para a data selecionada");
+
+  } catch (error: any) {
+    // Verifica se é um erro de API com status 500
+    if (error.response?.status === 500) {
+      throw new Error("Não há dados para a data selecionada");
+    }
+    
+    // Para outros erros, mantém a mensagem original
+    console.error("Erro ao buscar produção por hora:", error);
+    throw new Error("Erro ao buscar dados de produção");
   }
 };

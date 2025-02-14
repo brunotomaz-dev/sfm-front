@@ -1,4 +1,4 @@
-table {
+.table-pLive {
   background-color: #E3E3E3;
   /* border: 2px #00A13A solid; */
   margin: 0 auto;
@@ -7,9 +7,9 @@ table {
   width: 98%;
 }
 
-tr { background-color: white; }
+.table-pLive tr { background-color: white; }
 
-th {
+.table-pLive th {
   background-color: #d8d8d8;
   border-bottom: #e3e3e3 5px solid;
   color: rgb(39, 39, 39);
@@ -25,7 +25,7 @@ th {
   z-index: 1;
 }
 
-td {
+.table-pLive td {
   padding: 8px;
   font-size: 0.9vw;
   /* border-bottom: 1px solid #00A13A; */
@@ -34,12 +34,12 @@ td {
 }
 
 /* tbody tr:nth-child(odd) { background-color: #ffffff; } */
-tbody tr:hover {
+.table-pLive tbody tr:hover {
   background-color: whitesmoke;
   cursor: pointer;
 } 
 
-tbody td:hover {
+.table-pLive tbody td:hover {
   background-color: rgb(39, 39, 39);
   color: whitesmoke;
 }

@@ -1,3 +1,4 @@
+import { format, startOfDay } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Table } from 'react-bootstrap';
 import { getMaquinaInfo } from '../api/apiRequests';
@@ -14,8 +15,8 @@ interface iMaquinas {
 }
 
 const HomeLinesCard: React.FC = () => {
-  const now = new Date();
-  const nowDate = now.toISOString().split('T')[0];
+  const now = startOfDay(new Date());
+  const nowDate = format(now, 'yyyy-MM-dd');
   const [machines, setMachines] = useState<iMaquinas[]>([]);
   const lineMachine = useAppSelector((state: RootState) => state.home.lineMachine as { [key: string]: number });
 

@@ -1,3 +1,4 @@
+import { format, startOfDay } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
@@ -24,10 +25,10 @@ const Home: React.FC = () => {
   const [repairs, setRepairs] = useState<iRepair[]>([]);
 
   // Conseguir a data de hoje
-  const now = new Date();
+  const now = startOfDay(new Date());
 
   //Deixar a data no formato yyyy-mm-dd
-  const nowDate = now.toISOString().split('T')[0];
+  const nowDate = format(now, 'yyyy-MM-dd');
 
   // Conseguir a média de eficiencia
   const eficienciaMedia =

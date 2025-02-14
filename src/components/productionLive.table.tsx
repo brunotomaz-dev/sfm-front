@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/productionLive.css';
 
 /* -------------------------------------------------------------------------------------------------------- */
 /*                                                Interfaces                                                */
@@ -22,15 +23,12 @@ interface TableRow {
 /* -------------------------------------------------------------------------------------------------------- */
 
 const ProductionLiveTable: React.FC<ProductionTableProps> = ({ data }) => {
-  console.log(data);
-
   // Separar dados regulares e totais
   const regularData = data.filter((item) => item.intervalo !== 'Total');
   const totalsData = data.filter((item) => item.intervalo === 'Total');
 
   // Obter intervalos únicos (excluindo Total)
   const intervals = [...new Set(regularData.map((item) => item.intervalo))];
-  console.log(intervals);
 
   // Obter linhas únicas e ordenar
   const lines = [...new Set(regularData.map((item) => item.linha))]
@@ -61,7 +59,7 @@ const ProductionLiveTable: React.FC<ProductionTableProps> = ({ data }) => {
   /* ------------------------------------------- Layout Componente ------------------------------------------ */
 
   return (
-    <table>
+    <table className="table-responsive table-pLive">
       <thead>
         <tr>
           <th>Intervalo</th>
