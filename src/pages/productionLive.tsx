@@ -7,6 +7,7 @@ import { getHourProduction } from '../api/apiRequests';
 import ProductionLiveTable from '../components/productionLive.table';
 import { useAppSelector } from '../redux/store/hooks';
 import { RootState } from '../redux/store/store';
+import '../styles/datePicker.css';
 
 interface ProductionData {
   maquina_id: string;
@@ -54,16 +55,18 @@ const ProductionLive: React.FC = () => {
   return (
     <main className={`p-2 w-100 main-content ${isCollapsed ? 'collapsed' : ''}`}>
       <h1 className="text-center p-2">Caixas produzidas por hora</h1>
-      <div className="d-flex justify-content-center mb-4">
+      <div className="d-flex justify-content-center mb-4 position-relative custom-datepicker">
         <DatePicker
           selected={parseISO(selectedDate)}
           onChange={(date: Date | null) => handleDateChange(date)}
           dateFormat="dd/MM/yyyy"
-          className="form-control text-center"
+          className="form-control text-center "
           calendarIconClassName="mr-2"
           icon={'bi bi-calendar'}
           showIcon={true}
-          withPortal={true}
+          // withPortal={true}
+          popperClassName="custom-popper"
+          calendarClassName="custom-calendar"
           locale={ptBR}
           minDate={parseISO('2024-08-01')}
           maxDate={now}

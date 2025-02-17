@@ -9,9 +9,10 @@ interface GaugeProps {
   data: number;
   large?: boolean;
   pos?: Position;
+  trio?: boolean;
 }
 
-const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, large = false, pos = 'up-center' }) => {
+const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, large = false, pos = 'up-center', trio = false }) => {
   // Opções de cores do gauge conforme o indicador
   const optColor = {
     [IndicatorType.PERFORMANCE]: [
@@ -53,8 +54,8 @@ const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, large = false, pos 
     series: [
       {
         title: {
-          offsetCenter: [0, '110%'],
-          fontSize: 20,
+          offsetCenter: trio ? [0, '120%'] : [0, '110%'],
+          fontSize: trio ? 16 : 20,
           color: 'auto',
           fontWeight: 'bold',
           fontFamily: 'Poppins',
@@ -69,7 +70,7 @@ const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, large = false, pos 
         axisLine: {
           lineStyle: {
             color: optColor[indicator],
-            width: 15,
+            width: trio ? 12 : 15,
             shadowColor: 'rgba(0,0,0,0.5)',
             shadowBlur: 10,
           },
@@ -82,15 +83,15 @@ const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, large = false, pos 
         },
         axisTick: {
           length: 4,
-          distance: -15,
+          distance: trio ? -12 : -15,
           lineStyle: {
             color: '#fff',
             width: 2,
           },
         },
         splitLine: {
-          length: 15,
-          distance: -15,
+          length: trio ? 12 : 15,
+          distance: trio ? -12 : -15,
           width: 2,
           lineStyle: {
             color: '#fff',
@@ -103,8 +104,8 @@ const GaugeChart: React.FC<GaugeProps> = ({ indicator, data, large = false, pos 
           distance: -15,
         },
         detail: {
-          fontSize: 30,
-          offsetCenter: [0, '70%'],
+          fontSize: trio ? 25 : 30,
+          offsetCenter: trio ? [0, '80%'] : [0, '70%'],
           valueAnimation: true,
           formatter: function (value: number) {
             return Math.round(value) + '%';

@@ -67,7 +67,7 @@ const Sidebar: React.FC = () => {
     { label: 'Home', icon: 'bi bi-house', href: '/' },
     userLevels[5] && { label: 'Shop Floor Management', icon: 'bi bi-graph-up', href: '/sfm' },
     userLevels[4] && { label: 'Produção por hora', icon: 'bi bi-box-seam', href: '/p-live' },
-    userLevels[5] && { label: 'Linhas ao vivo', icon: 'bi bi-speedometer2', href: '/live' },
+    userLevels[5] && { label: 'Linhas do Recheio', icon: 'bi bi-speedometer2', href: '/live' },
     userLevels[4] && { label: 'Linhas Histórico', icon: 'bi bi-clock-history', href: '/h-lines' },
     userLevels[4] && { label: 'Gestão', icon: 'bi bi-gear', href: '/management' },
   ];
