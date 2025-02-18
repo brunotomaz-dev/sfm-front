@@ -55,12 +55,12 @@ export const getInfoIHM = async (data: string | string[]) => {
   }
 };
 
-export const getMaquinaInfo = async ({data, turno, maquina_id}: iParams) => {
+export const getMaquinaInfo = async ({data, turno, maquina_id}: iParams, fields?: string[]) => {
   const dateFilter = Array.isArray(data) && data.length > 1 ? { data_registro__gte: data[0], data_registro__lte: data[1] } : { data_registro__gte: data[0] };
   // Define os parâmetros caso a data possua 2 valores
   const params = Array.isArray(data)
-    ? { ...dateFilter, ...maquina_id && { maquina_id }, ...turno && { turno } }
-    : { data_registro: data, ...maquina_id && { maquina_id }, ...turno && { turno } };
+    ? { ...dateFilter, ...maquina_id && { maquina_id }, ...turno && { turno }, ...fields && { fields: fields.join(",") } }
+    : { data_registro: data, ...maquina_id && { maquina_id }, ...turno && { turno }, ...fields && { fields: fields.join(",") } };
 
   try {
     const response = await api.get("api/maquinainfo/", {params: params});  // cSpell: disable-line

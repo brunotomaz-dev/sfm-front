@@ -3,7 +3,7 @@ import { ptBR } from 'date-fns/locale';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Col, FormSelect, Row } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
-import { getIndicator } from '../api/apiRequests';
+import { getIndicator, getMaquinaInfo } from '../api/apiRequests';
 import GaugeChart from '../components/gauge';
 import { IndicatorType } from '../helpers/constants';
 import { getShift } from '../helpers/turn';
@@ -21,6 +21,7 @@ interface iIndicator {
 }
 
 interface iEff extends iIndicator {
+  maquina_id: string;
   total_produzido: number;
   eficiencia: number;
 }
@@ -31,6 +32,15 @@ interface iRep extends iIndicator {
 
 interface iPerf extends iIndicator {
   performance: number;
+}
+
+interface iMaquinaInfo {
+  ciclo_1_min: number;
+  hora_registro: string;
+  produto: string;
+  recno: number;
+  status: string;
+  tempo_parada: number;
 }
 
 const LiveLines: React.FC = () => {
@@ -59,6 +69,8 @@ const LiveLines: React.FC = () => {
   const [performance, setPerformance] = useState<number>(0);
   const [reparos, setReparos] = useState<number>(0);
   const [productionTotal, setProductionTotal] = useState<number>(0);
+  const [selectedMachine, setSelectedMachine] = useState<string>('');
+  const [maquinaInfo, setMaquinaInfo] = useState<iMaquinaInfo[]>([]);
 
   /* ------------------------------------------------ HANDLES ----------------------------------------------- */
   // Mudança de data
@@ -121,6 +133,7 @@ const LiveLines: React.FC = () => {
     // Indicador de eficiência
     void getIndicator(IndicatorType.EFFICIENCY, selectedDate, [
       'linha',
+      'maquina_id',
       'turno',
       'data_registro',
       'total_produzido',
@@ -148,15 +161,32 @@ const LiveLines: React.FC = () => {
     calculateAverage(filterData(perfData), 'performance', setPerformance);
     calculateAverage(filterData(repData), 'reparo', setReparos);
     setProductionTotal(eficienciaFiltered.reduce((acc, curr) => acc + curr.total_produzido, 0));
+    setSelectedMachine(eficienciaFiltered[0]?.maquina_id ?? '');
   }, [effData, perfData, repData, filterData]);
+
+  useEffect(() => {
+    // Requisição de Maquina Info
+    if (!selectedMachine) return;
+    void getMaquinaInfo({ data: selectedDate, turno: selectedShift, maquina_id: selectedMachine }, [
+      'ciclo_1_min',
+      'hora_registro',
+      'produto',
+      'recno',
+      'status',
+      'tempo_parada',
+    ]).then((data: iMaquinaInfo[]) => {
+      setMaquinaInfo(data);
+    });
+  }, [selectedMachine, selectedDate, selectedShift]);
 
   /* -------------------------------------------------------------------------------------------------------- */
   /*                                                  Layout                                                  */
   /* -------------------------------------------------------------------------------------------------------- */
   return (
     <main className={`p-2 w-100 main-content ${isCollapsed ? 'collapsed' : ''}`}>
-      <h1 className="text-center">{selectedDate === nowDate ? 'Linhas em Tempo Real' : 'Linhas Histórico'}</h1>
-      <Row className="d-flex justify-content-between m-2">
+      <h1 className="text-center p-2">{selectedDate === nowDate ? 'Linhas em Tempo Real' : 'Linhas Histórico'}</h1>
+      <h5 className="text-center">{`(${selectedMachine})`}</h5>
+      <Row className="d-flex justify-content-between mb-2">
         <Col>
           <DatePicker
             selected={parseISO(selectedDate)}
@@ -193,7 +223,7 @@ const LiveLines: React.FC = () => {
           <p>Produção</p>
           <h1 className="text-center">{productionTotal}</h1>
           <p>Produto</p>
-          <h2 className="text-center">Produto Descrito Aqui</h2>
+          <h4 className="text-center">{maquinaInfo.at(-1)?.produto?.trim() || '-'}</h4>
         </Col>
         {/* Coluna de barras */}
         <Col xs={5} xl className="card p-2 shadow mb-lg-0 mb-2">
@@ -217,7 +247,7 @@ const LiveLines: React.FC = () => {
       </Row>
       <Row className="d-flex justify-content-center m-2 gap-1 bg-success-subtle">
         <Col className="card bg-transparent d-flex justify-content-between">
-          <Row className="card text-center bg-success mb-3">Status</Row>
+          <Row className="card text-center bg-success mb-3">{maquinaInfo.at(-1)?.status === 'true' ? 'Rodando' : "Parada"}</Row>
           <Row className="mb-3">
             <FormSelect
               value={selectedLine}

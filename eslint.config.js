@@ -57,6 +57,7 @@ export default tseslint.config(
       // Regras específicas para React v6
       'react/prop-types': 'off', // TypeScript já cuida da tipagem
       'react/react-in-jsx-scope': 'off', // Não necessário no React 17+
+      '@typescript-eslint/no-unused-call': "warn",
     },
   },
 )

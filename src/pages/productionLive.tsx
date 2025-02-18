@@ -55,7 +55,7 @@ const ProductionLive: React.FC = () => {
   return (
     <main className={`p-2 w-100 main-content ${isCollapsed ? 'collapsed' : ''}`}>
       <h1 className="text-center p-2">Caixas produzidas por hora</h1>
-      <div className="d-flex justify-content-center mb-4 position-relative custom-datepicker">
+      <div className="d-flex justify-content-between mb-2 ms-3">
         <DatePicker
           selected={parseISO(selectedDate)}
           onChange={(date: Date | null) => handleDateChange(date)}
