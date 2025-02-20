@@ -1,11 +1,11 @@
 import { format, startOfDay } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Table } from 'react-bootstrap';
-import { getMaquinaInfo } from '../api/apiRequests';
-import { getShift } from '../helpers/turn';
-import { iMaquinaInfo } from '../interfaces/MaquinaInfo.interface';
-import { useAppSelector } from '../redux/store/hooks';
-import { RootState } from '../redux/store/store';
+import { getMaquinaInfo } from '../../../api/apiRequests';
+import { getShift } from '../../../helpers/turn';
+import { iMaquinaInfo } from '../../../interfaces/MaquinaInfo.interface';
+import { useAppSelector } from '../../../redux/store/hooks';
+import { RootState } from '../../../redux/store/store';
 
 interface iMaquinas {
   maquina_id: string;

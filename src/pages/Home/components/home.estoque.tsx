@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Table } from 'react-bootstrap';
-import { getEstoqueAtual } from '../api/apiRequests';
+import { getEstoqueAtual } from '../../../api/apiRequests';
 
 interface iEstoque {
   produto: string;

@@ -1,13 +1,13 @@
 import { format, startOfDay } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
-import { getIndicator } from '../api/apiRequests';
-import GaugeChart from '../components/gauge';
-import Heatmap from '../components/sfm.heatmap';
-import LineSFM from '../components/sfm.line';
-import { IndicatorType, RecheioMeta } from '../helpers/constants';
-import { useAppSelector } from '../redux/store/hooks';
-import { RootState } from '../redux/store/store';
+import { getIndicator } from '../../../api/apiRequests';
+import GaugeChart from '../../../components/gauge';
+import { IndicatorType, RecheioMeta } from '../../../helpers/constants';
+import { useAppSelector } from '../../../redux/store/hooks';
+import { RootState } from '../../../redux/store/store';
+import Heatmap from './sfm.heatmap';
+import LineSFM from './sfm.line';
 
 interface iEff {
   data_registro: string;
@@ -120,78 +120,78 @@ const ShopFloor: React.FC = () => {
   /* ------------------------------------------------ Layout ------------------------------------------------ */
   return (
     <main className={`p-2 w-100 main-content ${isCollapsed ? 'collapsed' : ''}`}>
-      <h1 className="text-center">Shop Floor Management</h1>
+      <h1 className='text-center'>Shop Floor Management</h1>
       <section>
-        <Card className="shadow bg-transparent border-0 p-3 mb-2">
+        <Card className='shadow bg-transparent border-0 p-3 mb-2'>
           <Row>
-            <h3 className="text-center">Eficiência - {RecheioMeta.EFFICIENCY}%</h3>
-            <Col className="col-2">
-              <Card className="bg-transparent border-0 p-3 mb-2">
-                <p className="text-center">Mês Anterior</p>
+            <h3 className='text-center'>Eficiência - {RecheioMeta.EFFICIENCY}%</h3>
+            <Col className='col-2'>
+              <Card className='bg-transparent border-0 p-3 mb-2'>
+                <p className='text-center'>Mês Anterior</p>
                 <GaugeChart indicator={IndicatorType.EFFICIENCY} data={lastEfficiency} />
               </Card>
             </Col>
-            <Col className="col-8">
-              <Card className="bg-transparent border-0 p-3 mb-2">
+            <Col className='col-8'>
+              <Card className='bg-transparent border-0 p-3 mb-2'>
                 <Heatmap indicator={IndicatorType.EFFICIENCY} />
               </Card>
-              <Card className="bg-transparent border-0 p-3 mb-2">
+              <Card className='bg-transparent border-0 p-3 mb-2'>
                 <LineSFM indicator={IndicatorType.EFFICIENCY} />
               </Card>
             </Col>
-            <Col className="col-2">
-              <Card className="bg-transparent border-0 p-3 mb-2">
-                <p className="text-center">Mês Atual</p>
+            <Col className='col-2'>
+              <Card className='bg-transparent border-0 p-3 mb-2'>
+                <p className='text-center'>Mês Atual</p>
                 <GaugeChart indicator={IndicatorType.EFFICIENCY} data={currentEfficiency} />
               </Card>
             </Col>
           </Row>
         </Card>
-        <Card className="shadow bg-transparent border-0 p-3 mb-2">
+        <Card className='shadow bg-transparent border-0 p-3 mb-2'>
           <Row>
-            <h3 className="text-center">Performance - {RecheioMeta.PERFORMANCE}%</h3>
-            <Col className="col-2">
-              <Card className="bg-transparent border-0 p-3 mb-2">
-                <p className="text-center">Mês Anterior</p>
+            <h3 className='text-center'>Performance - {RecheioMeta.PERFORMANCE}%</h3>
+            <Col className='col-2'>
+              <Card className='bg-transparent border-0 p-3 mb-2'>
+                <p className='text-center'>Mês Anterior</p>
                 <GaugeChart indicator={IndicatorType.PERFORMANCE} data={lastPerformance} />
               </Card>
             </Col>
-            <Col className="col-8">
-              <Card className="bg-transparent border-0 p-3 mb-2">
+            <Col className='col-8'>
+              <Card className='bg-transparent border-0 p-3 mb-2'>
                 <Heatmap indicator={IndicatorType.PERFORMANCE} />
               </Card>
-              <Card className="bg-transparent border-0 p-3 mb-2">
+              <Card className='bg-transparent border-0 p-3 mb-2'>
                 <LineSFM indicator={IndicatorType.PERFORMANCE} />
               </Card>
             </Col>
-            <Col className="col-2">
-              <Card className="bg-transparent border-0 p-3 mb-2">
-                <p className="text-center">Mês Atual</p>
+            <Col className='col-2'>
+              <Card className='bg-transparent border-0 p-3 mb-2'>
+                <p className='text-center'>Mês Atual</p>
                 <GaugeChart indicator={IndicatorType.PERFORMANCE} data={currentPerformance} />
               </Card>
             </Col>
           </Row>
         </Card>
-        <Card className="shadow bg-transparent border-0 p-3 mb-2">
+        <Card className='shadow bg-transparent border-0 p-3 mb-2'>
           <Row>
-            <h3 className="text-center">Reparos - {RecheioMeta.REPAIR}%</h3>
-            <Col className="col-2">
-              <Card className="bg-transparent border-0 p-3 mb-2">
-                <p className="text-center">Mês Anterior</p>
+            <h3 className='text-center'>Reparos - {RecheioMeta.REPAIR}%</h3>
+            <Col className='col-2'>
+              <Card className='bg-transparent border-0 p-3 mb-2'>
+                <p className='text-center'>Mês Anterior</p>
                 <GaugeChart indicator={IndicatorType.REPAIR} data={lastRepairs} />
               </Card>
             </Col>
-            <Col className="col-8">
-              <Card className="bg-transparent border-0 p-3 mb-2">
+            <Col className='col-8'>
+              <Card className='bg-transparent border-0 p-3 mb-2'>
                 <Heatmap indicator={IndicatorType.REPAIR} />
               </Card>
-              <Card className="bg-transparent border-0 p-3 mb-2">
+              <Card className='bg-transparent border-0 p-3 mb-2'>
                 <LineSFM indicator={IndicatorType.REPAIR} />
               </Card>
             </Col>
-            <Col className="col-2">
-              <Card className="bg-transparent border-0 p-3 mb-2">
-                <p className="text-center">Mês Atual</p>
+            <Col className='col-2'>
+              <Card className='bg-transparent border-0 p-3 mb-2'>
+                <p className='text-center'>Mês Atual</p>
                 <GaugeChart indicator={IndicatorType.REPAIR} data={currentRepairs} />
               </Card>
             </Col>

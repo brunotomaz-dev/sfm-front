@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import './App.css';
+import './styles/main.scss';
 
 import { useEffect } from 'react';
 import { initAuth } from './api/auth';
@@ -8,12 +8,12 @@ import Sidebar from './components/sidebar';
 import { groupLevels } from './helpers/constants';
 import HomeFake from './pages/example';
 import HistoricLines from './pages/histLines';
-import Home from './pages/home';
-import LiveLines from './pages/liveLines';
-import LoginPage from './pages/login';
-import Management from './pages/management';
-import ProductionLive from './pages/productionLive';
-import ShopFloor from './pages/sfm';
+import Home from './pages/Home/home';
+import LiveLines from './pages/LiveLines/liveLines';
+import LoginPage from './pages/Login/login';
+import Management from './pages/Management/management';
+import ProductionLive from './pages/ProductionLive/productionLive';
+import ShopFloor from './pages/ShopFloor/sfm';
 
 function App() {
   useEffect(() => {
@@ -22,26 +22,26 @@ function App() {
 
   return (
     <>
-      <main className="w-100 d-flex">
+      <main className='w-100 d-flex'>
         <Sidebar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="sfm" element={<PrivateRoute element={<ShopFloor />} allowedGroups={[...groupLevels[5]]} />} />
+          <Route path='/' element={<Home />} />
+          <Route path='login' element={<LoginPage />} />
+          <Route path='sfm' element={<PrivateRoute element={<ShopFloor />} allowedGroups={[...groupLevels[5]]} />} />
           <Route
-            path="p-live"
+            path='p-live'
             element={<PrivateRoute element={<ProductionLive />} allowedGroups={[...groupLevels[4]]} />}
           />
-          <Route path="live" element={<PrivateRoute element={<LiveLines />} allowedGroups={[...groupLevels[5]]} />} />
+          <Route path='live' element={<PrivateRoute element={<LiveLines />} allowedGroups={[...groupLevels[5]]} />} />
           <Route
-            path="h-lines"
+            path='h-lines'
             element={<PrivateRoute element={<HistoricLines />} allowedGroups={[...groupLevels[4]]} />}
           />
           <Route
-            path="management"
+            path='management'
             element={<PrivateRoute element={<Management />} allowedGroups={[...groupLevels[4]]} />}
           />
-          <Route path="init" element={<HomeFake />} />
+          <Route path='init' element={<HomeFake />} />
         </Routes>
       </main>
     </>

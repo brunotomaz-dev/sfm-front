@@ -1,8 +1,8 @@
 import { format, startOfDay } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Table } from 'react-bootstrap';
-import { getCarrinhosCount } from '../api/apiRequests';
-import { iCartCount } from '../interfaces/Carrinhos.interface';
+import { getCarrinhosCount } from '../../../api/apiRequests';
+import { iCartCount } from '../../../interfaces/Carrinhos.interface';
 
 const HomeCartCountCart: React.FC = () => {
   // Encontrar primeiro dia do mês
