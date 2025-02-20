@@ -1,8 +1,8 @@
 import { format, startOfDay } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Table } from 'react-bootstrap';
-import { getProduction } from '../api/apiRequests';
-import { iProduction } from '../interfaces/production.interface';
+import { getProduction } from '../../../api/apiRequests';
+import { iProduction } from '../../ProductionLive/interfaces/production.interface';
 
 const HomeProductionCard: React.FC = () => {
   const [totalByProduct, setTotalByProduct] = useState<{ [key: string]: number }>({});

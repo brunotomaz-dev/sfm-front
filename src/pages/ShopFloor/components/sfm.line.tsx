@@ -1,8 +1,8 @@
 import { format, startOfDay } from 'date-fns';
 import EChartsReact from 'echarts-for-react';
 import React, { useEffect, useMemo, useState } from 'react';
-import { getIndicator } from '../api/apiRequests';
-import { ColorsSTM, IndicatorType } from '../helpers/constants';
+import { getIndicator } from '../../../api/apiRequests';
+import { ColorsSTM, IndicatorType } from '../../../helpers/constants';
 
 interface iLineProps {
   indicator: IndicatorType;
