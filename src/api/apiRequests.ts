@@ -77,7 +77,6 @@ export const getInfoIHM = async <
         }),
     ...(fields && { fields: fields.join(',') }),
   };
-  console.log(params);
 
   try {
     const response = await api.get('api/info_ihm/', { params: params });

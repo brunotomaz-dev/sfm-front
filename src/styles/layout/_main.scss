@@ -24,11 +24,11 @@
   --fs-6: clamp(0.87rem, 3vw, 1rem);
   --fs-7: clamp(0.8rem, 3vw, 0.875rem);
 
-  h1 { font-size: var(--fs-1); }
-  h2 { font-size: var(--fs-2); }
-  h3 { font-size: var(--fs-3); }
-  h4 { font-size: var(--fs-4); }
-  h5 { font-size: var(--fs-5); }
-  h6 { font-size: var(--fs-6); }
-  p { font-size: var(--fs-7); }
+  * > h1, & h1 { font-size: var(--fs-1); }
+  * > h2, & h2 { font-size: var(--fs-2); }
+  * > h3, & h3 { font-size: var(--fs-3); }
+  * > h4, & h4 { font-size: var(--fs-4); }
+  * > h5, & h5 { font-size: var(--fs-5); }
+  * > h6, & h6 { font-size: var(--fs-6); }
+  * > p, & p { font-size: var(--fs-7); }
 }

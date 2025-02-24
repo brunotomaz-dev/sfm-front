@@ -58,7 +58,8 @@ const LineControls: React.FC<ControlsProps> = ({
         </FormSelect>
       </Row>
       {statusRender && <MachineStatus status={status} />}
-      <Row className='card text-center bg-warning'>Problema - Em Construção</Row>
+      <Row className='card text-center bg-warning mb-3'>Problema - Em Construção</Row>
+      <Row className='card text-center bg-light p-3'>Tempo Parada - Em Construção</Row>
     </>
   );
 };

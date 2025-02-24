@@ -6,6 +6,9 @@ import PageLayout from '../../components/pageLayout';
 import { IndicatorType } from '../../helpers/constants';
 import { getShift } from '../../helpers/turn';
 import useInterval from '../../hooks/useInterval';
+import BarStops from './components/barStops';
+import EfficiencyComparison from './components/effComparison';
+import GaugeAverage from './components/gaugeAverage';
 import LineIndicators from './components/gauges';
 import LiveLinesHeader from './components/header';
 import LineControls from './components/lineControls';
@@ -14,9 +17,20 @@ import { iEff, iIndicator, iPerf, iRep } from './interfaces/indicator.interfaces
 import { iInfoIhmLive } from './interfaces/infoIhm';
 import { iMaquinaInfo } from './interfaces/maquinaInfo.interface';
 
+/* --------------------------------------------- TIPOS LOCAIS --------------------------------------------- */
 type tShiftOptions = 'NOT' | 'MAT' | 'VES' | 'DEFAULT';
 type IndicatorKey = 'eficiencia' | 'performance' | 'reparo';
 type SetStateFunction = (value: number) => void;
+
+interface iEfficiencyComparison {
+  linha: number;
+  turno: string;
+  eficiencia: number;
+}
+
+/* -------------------------------------------------------------------------------------------------------- */
+/*                                           Componente Principal                                           */
+/* -------------------------------------------------------------------------------------------------------- */
 
 const LiveLines: React.FC = () => {
   /* ----------------------------------------------- VARIÁVEIS ---------------------------------------------- */
@@ -46,6 +60,13 @@ const LiveLines: React.FC = () => {
   const [selectedMachine, setSelectedMachine] = useState<string>('');
   const [maquinaInfo, setMaquinaInfo] = useState<iMaquinaInfo[]>([]);
   const [infoIHM, setInfoIHM] = useState<iInfoIhmLive[]>([]);
+  const [monthEff, setMonthEff] = useState<number>(0);
+  const [turnEff, setTurnEff] = useState<number>(0);
+  const [lineEff, setLineEff] = useState<number>(0);
+  const [lineMatEff, setLineMatEff] = useState<number>(0);
+  const [lineVesEff, setLineVesEff] = useState<number>(0);
+  const [lineNotEff, setLineNotEff] = useState<number>(0);
+  const [containerHeight, setContainerHeight] = useState<string>('100%');
 
   /* ------------------------------------------------ HANDLES ----------------------------------------------- */
   // Mudança de data
@@ -99,8 +120,8 @@ const LiveLines: React.FC = () => {
   };
 
   /* ------------------------------------------ REQUISIÇÕES DA API ------------------------------------------ */
+  // Requisição de eficiência, performance e reparo
   const fetchIndicators = async () => {
-    // Requisição de eficiência, performance e reparo
     const [effData, perfData, repData] = await Promise.all([
       getIndicator(IndicatorType.EFFICIENCY, selectedDate, [
         'linha',
@@ -119,18 +140,49 @@ const LiveLines: React.FC = () => {
     setRepData(repData);
   };
 
+  // Requisição de Maquina Info
+  const fetchMaqInfo = async () => {
+    if (selectedMachine) {
+      const params =
+        selectedShift === 'TOT'
+          ? { data: selectedDate, maquina_id: selectedMachine }
+          : { data: selectedDate, turno: selectedShift, maquina_id: selectedMachine };
+      const data = await getMaquinaInfo(params, [
+        'ciclo_1_min',
+        'hora_registro',
+        'produto',
+        'recno',
+        'status',
+        'tempo_parada',
+      ]);
+      setMaquinaInfo(data);
+    }
+  };
+
+  // Requisição de info + ihm
+  const fetchInfoIHM = async () => {
+    const params =
+      selectedShift === 'TOT'
+        ? { data: selectedDate, linha: selectedLine }
+        : { data: selectedDate, linha: selectedLine, turno: selectedShift };
+
+    const data = await getInfoIHM(params, [
+      'status',
+      'data_hora',
+      'data_hora_final',
+      'motivo',
+      'problema',
+      'causa',
+      'tempo',
+    ]);
+    setInfoIHM(data);
+  };
+
+  /* ---------------------------------------------- USE EFFECTS --------------------------------------------- */
   // Requisição de indicadores
   useEffect(() => {
     void fetchIndicators();
   }, [selectedDate]);
-
-  // Nova requisição em intervalo de 60s
-  useInterval(
-    () => {
-      void fetchIndicators();
-    },
-    selectedDate === nowDate ? 60 * 1000 : null
-  );
 
   // Setar os valores dos indicadores
   useEffect(() => {
@@ -142,35 +194,98 @@ const LiveLines: React.FC = () => {
     setSelectedMachine(eficienciaFiltered[0]?.maquina_id ?? '');
   }, [effData, perfData, repData, filterData]);
 
+  // Requisição de Maquina Info
   useEffect(() => {
-    // Requisição de Maquina Info
-    if (!selectedMachine) return;
-
-    const params =
-      selectedShift === 'TOT'
-        ? { data: selectedDate, maquina_id: selectedMachine }
-        : { data: selectedDate, turno: selectedShift, maquina_id: selectedMachine };
-
-    void getMaquinaInfo(params, ['ciclo_1_min', 'hora_registro', 'produto', 'recno', 'status', 'tempo_parada']).then(
-      (data: iMaquinaInfo[]) => {
-        setMaquinaInfo(data);
-      }
-    );
+    void fetchMaqInfo();
   }, [selectedMachine, selectedDate, selectedShift]);
 
   // Requisição de info + ihm
   useEffect(() => {
-    const params =
-      selectedShift === 'TOT'
-        ? { data: selectedDate, linha: selectedLine }
-        : { data: selectedDate, linha: selectedLine, turno: selectedShift };
+    void fetchInfoIHM();
+  }, [selectedDate, selectedShift, selectedLine]);
 
-    void getInfoIHM(params, ['status', 'data_hora', 'data_hora_final', 'motivo', 'problema', 'causa', 'tempo']).then(
-      (data) => {
-        setInfoIHM(data);
+  useEffect(() => {
+    // Data inicial
+    const now = startOfDay(new Date());
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    const firstDayString = format(firstDay, 'yyyy-MM-dd');
+    void getIndicator(IndicatorType.EFFICIENCY, [firstDayString], ['linha', 'turno', 'eficiencia']).then(
+      (data: iEfficiencyComparison[]) => {
+        // Média da eficiência
+        const filteredData = data.filter((item) => item.eficiencia > 0);
+
+        const average =
+          filteredData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / filteredData.length;
+        setMonthEff(average * 100);
+
+        // Eficiência do turno
+        const turnData = filteredData.filter((item) => item.turno === selectedShift);
+        const turnAverage = turnData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / turnData.length;
+        setTurnEff(turnAverage * 100);
+
+        // Eficiência da linha
+        const lineData = filteredData.filter((item) => item.linha === selectedLine);
+        const lineAverage = lineData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / lineData.length;
+        setLineEff(lineAverage * 100);
+
+        // Eficiência da linha matutino
+        const lineMatData = lineData.filter((item) => item.turno === 'MAT');
+        const lineMatAverage =
+          lineMatData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / lineMatData.length;
+        setLineMatEff(lineMatAverage * 100);
+
+        // Eficiência da linha vespertino
+        const lineVesData = lineData.filter((item) => item.turno === 'VES');
+        const lineVesAverage =
+          lineVesData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / lineVesData.length;
+        setLineVesEff(lineVesAverage * 100);
+
+        // Eficiência da linha noturno
+        const lineNotData = lineData.filter((item) => item.turno === 'NOT');
+        const lineNotAverage =
+          lineNotData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / lineNotData.length;
+        setLineNotEff(lineNotAverage * 100);
       }
     );
-  }, [selectedDate, selectedShift, selectedLine]);
+  }, [selectedLine, selectedShift]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setContainerHeight(window.innerWidth >= 1200 ? '100%' : '400px');
+    };
+
+    // Configuração inicial
+    handleResize();
+
+    // Adiciona listener
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  /* --------------------------------------------- USE INTERVAL --------------------------------------------- */
+
+  // Nova requisição em intervalo de 60s
+  useInterval(
+    () => {
+      void fetchIndicators();
+    },
+    selectedDate === nowDate ? 60 * 1000 : null
+  );
+
+  useInterval(
+    () => {
+      void fetchMaqInfo();
+    },
+    selectedMachine ? 60 * 1000 : null
+  );
+
+  useInterval(
+    () => {
+      void fetchInfoIHM();
+    },
+    selectedDate === nowDate ? 60 * 1000 : null
+  );
 
   /* -------------------------------------------------------------------------------------------------------- */
   /*                                                  Layout                                                  */
@@ -189,21 +304,27 @@ const LiveLines: React.FC = () => {
           <LineIndicators eficiencia={eficiencia} performance={performance} reparos={reparos} />
         </Col>
         {/* ------------------------------------------ COLUNA DA PRODUÇÃO ------------------------------------------ */}
-        <Col xs={3} xl={2} className='card bg-transparent p-2 shadow mb-lg-0 mb-2 fs-responsive'>
+        <Col xs={3} xl={2} className='card bg-transparent shadow mb-lg-0 mb-2'>
           <ProductionPanel productionTotal={productionTotal} produto={maquinaInfo.at(-1)?.produto?.trim() || '-'} />
         </Col>
         {/* ------------------------------------------- COLUNA DE BARRAS ------------------------------------------- */}
-        <Col xs={5} xl className='card p-2 shadow mb-lg-0 mb-2'>
-          Barras - Em Construção
+        <Col xs={5} xl className='card p-2 shadow bg-transparent border-0 mb-lg-0 mb-2'>
+          <BarStops data={infoIHM} />
         </Col>
         {/* ----------------------------------------- COLUNA DE COMPARAÇÃO ----------------------------------------- */}
-        <Col xs xl className='card shadow mb-lg-0 mb-2'>
-          <Row className='d-flex justify-content-center'>Comparação entre eficiências - Em Construção</Row>
+        <Col xs xl className='card p-2 shadow bg-transparent border-0 mb-lg-0 mb-2'>
+          <EfficiencyComparison
+            factoryEff={monthEff}
+            turnEff={turnEff}
+            lineEff={lineEff}
+            currentEff={eficiencia}
+            currentTurn={selectedShift}
+          />
         </Col>
       </Row>
-      <Row className='d-flex justify-content-center m-2 gap-1 bg-success-subtle'>
+      <Row className='d-flex justify-content-center m-2 gap-1'>
         {/* ----------------------------------------- COLUNA DOS CONTROLES ----------------------------------------- */}
-        <Col className='card bg-transparent d-flex justify-content-between'>
+        <Col className='card bg-transparent border-0 h-100'>
           <LineControls
             selectedLine={selectedLine}
             selectedShift={selectedShift}
@@ -222,7 +343,17 @@ const LiveLines: React.FC = () => {
           Charts - Em Construção
         </Col>
         {/* ------------------------------------------- COLUNA DE TEMPOS ------------------------------------------- */}
-        <Col className='card p-2 shadow'>Tempos - Em Construção</Col>
+        <Col
+          className='card bg-light p-2 bg-transparent border-0 shadow align-items-center'
+          style={{ height: containerHeight }}
+        >
+          <Row className='w-100 h-100'>
+            <h6 className='mt-2 fs-6 text-center'> Eficiência Média da Linha</h6>
+            <GaugeAverage average={lineNotEff} turn='Noturno' />
+            <GaugeAverage average={lineMatEff} turn='Matutino' />
+            <GaugeAverage average={lineVesEff} turn='Vespertino' />
+          </Row>
+        </Col>
       </Row>
     </PageLayout>
   );
