@@ -7,9 +7,9 @@ interface MachineStatusProps {
 
 const MachineStatus: React.FC<MachineStatusProps> = ({ status }) => {
   const isRunning = status === 'true';
-  
+
   return (
-    <Row className={`card text-center mb-3 p-4 fs-3 text-light ${isRunning ? 'bg-success' : 'bg-danger'}`}>
+    <Row className={`card text-center mb-3 p-3 fs-3 text-light ${isRunning ? 'bg-success' : 'bg-danger'}`}>
       {isRunning ? 'Rodando' : 'Parada'}
     </Row>
   );

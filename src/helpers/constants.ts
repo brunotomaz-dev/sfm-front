@@ -60,16 +60,16 @@ export enum BSColors {
 }
 
 export const colorObj = {
-  "Rodando": BSColors.SUCCESS_COLOR,
-    "Refeição": BSColors.PINK_COLOR,
-    "Ajustes": BSColors.PRIMARY_COLOR,
-    "Manutenção": BSColors.SPACE_CADET_COLOR,
-    "Setup": BSColors.BLUE_DELFT_COLOR,
-    "Fluxo": BSColors.INDIGO_COLOR,
-    "Qualidade": BSColors.INFO_COLOR,
-    "Saída para Backup": BSColors.TEAL_COLOR,
-    "Liberada": BSColors.GREY_500_COLOR,
-    "Limpeza": BSColors.ORANGE_COLOR,
-    "Parada Programada": BSColors.DANGER_COLOR,
-    "Não apontado": BSColors.WARNING_COLOR,
+  ["Rodando"]: BSColors.SUCCESS_COLOR,
+  ["Refeição"]: BSColors.PINK_COLOR,
+  ["Ajustes"]: BSColors.PRIMARY_COLOR,
+  ["Manutenção"]: BSColors.SPACE_CADET_COLOR,
+  ["Setup"]: BSColors.BLUE_DELFT_COLOR,
+  ["Fluxo"]: BSColors.INDIGO_COLOR,
+  ["Qualidade"]: BSColors.INFO_COLOR,
+  ["Saída para Backup"]: BSColors.TEAL_COLOR,
+  ["Liberada"]: BSColors.GREY_500_COLOR,
+  ["Limpeza"]: BSColors.ORANGE_COLOR,
+  ["Parada Programada"]: BSColors.DANGER_COLOR,
+  ["Não apontado"]: BSColors.WARNING_COLOR,
 }

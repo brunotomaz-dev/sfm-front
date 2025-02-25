@@ -12,7 +12,9 @@ import GaugeAverage from './components/gaugeAverage';
 import LineIndicators from './components/gauges';
 import LiveLinesHeader from './components/header';
 import LineControls from './components/lineControls';
+import LineCycle from './components/lineycle';
 import ProductionPanel from './components/productionCard';
+import Timeline from './components/timeline';
 import { iEff, iIndicator, iPerf, iRep } from './interfaces/indicator.interfaces';
 import { iInfoIhmLive } from './interfaces/infoIhm';
 import { iMaquinaInfo } from './interfaces/maquinaInfo.interface';
@@ -66,7 +68,7 @@ const LiveLines: React.FC = () => {
   const [lineMatEff, setLineMatEff] = useState<number>(0);
   const [lineVesEff, setLineVesEff] = useState<number>(0);
   const [lineNotEff, setLineNotEff] = useState<number>(0);
-  const [containerHeight, setContainerHeight] = useState<string>('100%');
+  // const [containerHeight, setContainerHeight] = useState<string>('100%');
 
   /* ------------------------------------------------ HANDLES ----------------------------------------------- */
   // Mudança de data
@@ -249,20 +251,20 @@ const LiveLines: React.FC = () => {
     );
   }, [selectedLine, selectedShift]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setContainerHeight(window.innerWidth >= 1200 ? '100%' : '400px');
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setContainerHeight(window.innerWidth >= 1200 ? '100%' : '400px');
+  //   };
 
-    // Configuração inicial
-    handleResize();
+  //   // Configuração inicial
+  //   handleResize();
 
-    // Adiciona listener
-    window.addEventListener('resize', handleResize);
+  //   // Adiciona listener
+  //   window.addEventListener('resize', handleResize);
 
-    // Cleanup
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  //   // Cleanup
+  //   return () => window.removeEventListener('resize', handleResize);
+  // }, []);
   /* --------------------------------------------- USE INTERVAL --------------------------------------------- */
 
   // Nova requisição em intervalo de 60s
@@ -336,19 +338,21 @@ const LiveLines: React.FC = () => {
             cardStyle={cardStyle}
             status={maquinaInfo.at(-1)?.status || '-'}
             statusRender={shift === selectedShift}
+            infoParada={infoIHM.at(-1)}
           />
         </Col>
         {/* ------------------------------- COLUNA DOS GRÁFICOS DE CICLOS E TIMELINE ------------------------------- */}
-        <Col xs={12} xl={8} className='card p-2 shadow'>
-          Charts - Em Construção
+        <Col xs={12} xl={8} className='card p-2 shadow border-0 bg-transparent justify-content-around'>
+          <LineCycle maqInfo={maquinaInfo} />
+          <Timeline data={infoIHM} />
         </Col>
-        {/* ------------------------------------------- COLUNA DE TEMPOS ------------------------------------------- */}
+        {/* ------------------------------------------------ MÉDIAS ------------------------------------------------ */}
         <Col
           className='card bg-light p-2 bg-transparent border-0 shadow align-items-center'
-          style={{ height: containerHeight }}
+          // style={{ height: containerHeight }}
         >
           <Row className='w-100 h-100'>
-            <h6 className='mt-2 fs-6 text-center'> Eficiência Média da Linha</h6>
+            <h6 className='mt-2 fs-6 text-center fw-bold text-dark-emphasis'> Eficiência Média da Linha</h6>
             <GaugeAverage average={lineNotEff} turn='Noturno' />
             <GaugeAverage average={lineMatEff} turn='Matutino' />
             <GaugeAverage average={lineVesEff} turn='Vespertino' />

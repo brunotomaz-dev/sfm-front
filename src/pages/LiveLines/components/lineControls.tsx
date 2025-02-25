@@ -1,5 +1,7 @@
 import React from 'react';
 import { FormSelect, Row } from 'react-bootstrap';
+import { colorObj } from '../../../helpers/constants';
+import { iInfoIhmLive } from '../interfaces/infoIhm';
 import MachineStatus from './lineStatus';
 
 interface ControlsProps {
@@ -13,6 +15,7 @@ interface ControlsProps {
   cardStyle: React.CSSProperties;
   status: string;
   statusRender: boolean;
+  infoParada: iInfoIhmLive | undefined;
 }
 
 const LineControls: React.FC<ControlsProps> = ({
@@ -26,7 +29,15 @@ const LineControls: React.FC<ControlsProps> = ({
   cardStyle,
   status,
   statusRender,
+  infoParada,
 }) => {
+  // Definir o problema e motivo da parada
+  let problema = infoParada?.problema || 'Não Apontado';
+  const motivo = infoParada?.motivo || 'Não apontado';
+  problema = motivo === 'Parada Programada' ? infoParada?.causa || 'Não Apontado' : problema;
+
+  const bgColor = colorObj[motivo as keyof typeof colorObj] || colorObj['Não apontado'];
+
   return (
     <>
       <Row className='mb-3'>
@@ -58,8 +69,14 @@ const LineControls: React.FC<ControlsProps> = ({
         </FormSelect>
       </Row>
       {statusRender && <MachineStatus status={status} />}
-      <Row className='card text-center bg-warning mb-3'>Problema - Em Construção</Row>
-      <Row className='card text-center bg-light p-3'>Tempo Parada - Em Construção</Row>
+      {status !== 'true' && statusRender && (
+        <Row className='card text-center text-white px-1 py-3 fs-5 mb-3' style={{ backgroundColor: bgColor }}>
+          {problema}
+        </Row>
+      )}
+      {status !== 'true' && statusRender && (
+        <Row className='card text-center fs-4 bg-light p-3'>{infoParada?.tempo} minutos</Row>
+      )}
     </>
   );
 };
