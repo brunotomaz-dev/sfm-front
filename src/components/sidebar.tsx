@@ -68,7 +68,6 @@ const Sidebar: React.FC = () => {
     userLevels[5] && { label: 'Shop Floor Management', icon: 'bi bi-graph-up', href: '/sfm' },
     userLevels[4] && { label: 'Produção por hora', icon: 'bi bi-box-seam', href: '/p-live' },
     userLevels[5] && { label: 'Linhas do Recheio', icon: 'bi bi-speedometer2', href: '/live' },
-    userLevels[4] && { label: 'Linhas Histórico', icon: 'bi bi-clock-history', href: '/h-lines' },
     userLevels[4] && { label: 'Gestão', icon: 'bi bi-gear', href: '/management' },
   ];
 
@@ -76,25 +75,25 @@ const Sidebar: React.FC = () => {
   return (
     <>
       <div className={`d-flex flex-column flex-shrink-0 p-3 text-bg-light sidebar ${isCollapsed ? 'collapsed' : ''}`}>
-        <button className="btn btn-link align-self-end" onClick={toggleSidebar}>
+        <button className='btn btn-link align-self-end' onClick={toggleSidebar}>
           <i className={`bi ${isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'}`}></i>
         </button>
-        <Link to="/init" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-black text-decoration-none">
+        <Link to='/init' className='d-flex align-items-center mb-3 mb-md-0 me-md-auto text-black text-decoration-none'>
           <img
             src={STMLogo}
-            alt="Logo Colorido Santa Massa"
-            width="40vw"
+            alt='Logo Colorido Santa Massa'
+            width='40vw'
             className={`${isCollapsed ? 'me-0 ms-2' : 'me-2'}`}
           />
-          {!isCollapsed && <span className="fs-5">Shop Floor Management</span>}
+          {!isCollapsed && <span className='fs-5'>Shop Floor Management</span>}
         </Link>
         <hr></hr>
-        <ul className="nav nav-pills flex-column mb-auto">
+        <ul className='nav nav-pills flex-column mb-auto'>
           {navItems.map(
             (item) =>
               item && (
-                <li key={item.label} className="nav-item side-pill-h mb-1">
-                  <Link to={item.href} className="nav-link text-black">
+                <li key={item.label} className='nav-item side-pill-h mb-1'>
+                  <Link to={item.href} className='nav-link text-black'>
                     <i className={`bi ${item.icon} ${isCollapsed ? 'me-0 fs-3' : 'me-2 fs-5'}`}></i>
                     {!isCollapsed && <span>{item.label}</span>}
                   </Link>
@@ -103,28 +102,28 @@ const Sidebar: React.FC = () => {
           )}
         </ul>
         <hr></hr>
-        <div className="dropdown">
+        <div className='dropdown'>
           <Link
-            to="/"
-            className="d-flex align-items-center text-black text-decoration-none dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
+            to='/'
+            className='d-flex align-items-center text-black text-decoration-none dropdown-toggle'
+            data-bs-toggle='dropdown'
+            aria-expanded='false'
           >
-            <img src={STMLogoPxB} alt="" width="32" height="32" className="rounded-circle me-2"></img>
+            <img src={STMLogoPxB} alt='' width='32' height='32' className='rounded-circle me-2'></img>
             {!isCollapsed && <strong>{userName.length > 0 ? userName : 'Entrar'}</strong>}
           </Link>
-          <ul className="dropdown-menu dropdown-menu-light text-small shadow">
+          <ul className='dropdown-menu dropdown-menu-light text-small shadow'>
             {isLoggedIn ? (
               <>
                 <li>
-                  <Link className="dropdown-item" to="#">
+                  <Link className='dropdown-item' to='#'>
                     Mensagens
                   </Link>
                 </li>
                 <li>
                   <Link
-                    className="dropdown-item"
-                    to="#"
+                    className='dropdown-item'
+                    to='#'
                     onClick={(e) => {
                       e.preventDefault();
                       setShowChangePassword(true);
@@ -134,17 +133,17 @@ const Sidebar: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <hr className="dropdown-divider"></hr>
+                  <hr className='dropdown-divider'></hr>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="/" onClick={handleLogout}>
+                  <Link className='dropdown-item' to='/' onClick={handleLogout}>
                     Log out
                   </Link>
                 </li>
               </>
             ) : (
               <li>
-                <Link className="dropdown-item" to="/login">
+                <Link className='dropdown-item' to='/login'>
                   Log in
                 </Link>
               </li>

@@ -118,7 +118,7 @@ const LiveLines: React.FC = () => {
     }
 
     const average = filteredData.reduce((acc, curr) => acc + (curr[indicator] ?? 0), 0) / filteredData.length;
-    setState(indicator === 'reparo' ? average : average * 100);
+    setState(average * 100);
   };
 
   /* ------------------------------------------ REQUISIÇÕES DA API ------------------------------------------ */
@@ -217,36 +217,42 @@ const LiveLines: React.FC = () => {
         const filteredData = data.filter((item) => item.eficiencia > 0);
 
         const average =
-          filteredData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / filteredData.length;
-        setMonthEff(average * 100);
+          filteredData.reduce((acc, curr): number => acc + (Math.round(curr.eficiencia * 100) ?? 0), 0) /
+          filteredData.length;
+        setMonthEff(average);
 
         // Eficiência do turno
         const turnData = filteredData.filter((item) => item.turno === selectedShift);
-        const turnAverage = turnData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / turnData.length;
-        setTurnEff(turnAverage * 100);
+        const turnAverage =
+          turnData.reduce((acc, curr): number => acc + (Math.round(curr.eficiencia * 100) ?? 0), 0) / turnData.length;
+        setTurnEff(turnAverage);
 
         // Eficiência da linha
         const lineData = filteredData.filter((item) => item.linha === selectedLine);
-        const lineAverage = lineData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / lineData.length;
-        setLineEff(lineAverage * 100);
+        const lineAverage =
+          lineData.reduce((acc, curr): number => acc + (Math.round(curr.eficiencia * 100) ?? 0), 0) / lineData.length;
+        setLineEff(lineAverage);
 
         // Eficiência da linha matutino
         const lineMatData = lineData.filter((item) => item.turno === 'MAT');
         const lineMatAverage =
-          lineMatData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / lineMatData.length;
-        setLineMatEff(lineMatAverage * 100);
+          lineMatData.reduce((acc, curr): number => acc + (Math.round(curr.eficiencia * 100) ?? 0), 0) /
+          lineMatData.length;
+        setLineMatEff(lineMatAverage);
 
         // Eficiência da linha vespertino
         const lineVesData = lineData.filter((item) => item.turno === 'VES');
         const lineVesAverage =
-          lineVesData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / lineVesData.length;
-        setLineVesEff(lineVesAverage * 100);
+          lineVesData.reduce((acc, curr): number => acc + (Math.round(curr.eficiencia * 100) ?? 0), 0) /
+          lineVesData.length;
+        setLineVesEff(lineVesAverage);
 
         // Eficiência da linha noturno
         const lineNotData = lineData.filter((item) => item.turno === 'NOT');
         const lineNotAverage =
-          lineNotData.reduce((acc, curr): number => acc + (curr.eficiencia ?? 0), 0) / lineNotData.length;
-        setLineNotEff(lineNotAverage * 100);
+          lineNotData.reduce((acc, curr): number => acc + (Math.round(curr.eficiencia * 100) ?? 0), 0) /
+          lineNotData.length;
+        setLineNotEff(lineNotAverage);
       }
     );
   }, [selectedLine, selectedShift]);
@@ -310,7 +316,7 @@ const LiveLines: React.FC = () => {
           <ProductionPanel productionTotal={productionTotal} produto={maquinaInfo.at(-1)?.produto?.trim() || '-'} />
         </Col>
         {/* ------------------------------------------- COLUNA DE BARRAS ------------------------------------------- */}
-        <Col xs={5} xl className='card p-2 shadow bg-transparent border-0 mb-lg-0 mb-2'>
+        <Col xs={5} xl className='card p-2 justify-content-center shadow bg-transparent border-0 mb-lg-0 mb-2'>
           <BarStops data={infoIHM} />
         </Col>
         {/* ----------------------------------------- COLUNA DE COMPARAÇÃO ----------------------------------------- */}
@@ -337,7 +343,7 @@ const LiveLines: React.FC = () => {
             onShiftChange={setSelectedShift}
             cardStyle={cardStyle}
             status={maquinaInfo.at(-1)?.status || '-'}
-            statusRender={shift === selectedShift}
+            statusRender={shift === selectedShift && selectedDate === nowDate}
             infoParada={infoIHM.at(-1)}
           />
         </Col>

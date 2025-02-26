@@ -44,6 +44,10 @@ const ShopFloor: React.FC = () => {
   const lastMonthFinalDateString = format(finalDayOfLastMonth, 'yyyy-MM-dd');
 
   /* ---------------------------------------------- Requisições --------------------------------------------- */
+  const getAverage = (data: any[], key: string): number => {
+    return data.reduce((acc, curr): number => acc + curr[key] * 100, 0) / data.length;
+  };
+
   useEffect(() => {
     // Requisita o indicador de eficiencia
     void getIndicator(
@@ -54,8 +58,8 @@ const ShopFloor: React.FC = () => {
       // Remover onde a eficiencia é 0
       data = data.filter((item) => item.eficiencia > 0);
       // Obter a média de eficiencia
-      const average = data.reduce((acc, curr): number => acc + curr.eficiencia, 0) / data.length;
-      setLastEfficiency(average * 100);
+      const average = getAverage(data, 'eficiencia');
+      setLastEfficiency(average);
     });
 
     // Requisita o indicador de performance
@@ -65,16 +69,16 @@ const ShopFloor: React.FC = () => {
       ['data_registro', 'performance']
     ).then((data: iPerf[]) => {
       // Obter a média de performance
-      const average = data.reduce((acc, curr): number => acc + curr.performance, 0) / data.length;
-      setLastPerformance(average * 100);
+      const average = getAverage(data, 'performance');
+      setLastPerformance(average);
     });
 
     // Requisita o indicador de reparo
     void getIndicator('repair', [lastMonthFirstDateString, lastMonthFinalDateString], ['data_registro', 'reparo']).then(
       (data: iRep[]) => {
         // Obter a média de reparo
-        const average = data.reduce((acc, curr): number => acc + curr.reparo, 0) / data.length;
-        setLastRepairs(average * 100);
+        const average = getAverage(data, 'reparo');
+        setLastRepairs(average);
       }
     );
   }, [lastMonthFirstDateString, lastMonthFinalDateString]);
@@ -90,8 +94,8 @@ const ShopFloor: React.FC = () => {
       // Remover onde a eficiencia é 0
       data = data.filter((item) => item.eficiencia > 0);
       // Obter a média de eficiencia
-      const average = data.reduce((acc, curr): number => acc + curr.eficiencia, 0) / data.length;
-      setCurrentEfficiency(average * 100);
+      const average = getAverage(data, 'eficiencia');
+      setCurrentEfficiency(average);
     });
 
     // Indicador de performance
@@ -101,15 +105,15 @@ const ShopFloor: React.FC = () => {
       ['data_registro', 'performance']
     ).then((data: iPerf[]) => {
       // Obter a média de performance
-      const average = data.reduce((acc, curr): number => acc + curr.performance, 0) / data.length;
-      setCurrentPerformance(average * 100);
+      const average = getAverage(data, 'performance');
+      setCurrentPerformance(average);
     });
 
     // Indicador de reparo
     void getIndicator('repair', [currentMonthBeginningDateString], ['data_registro', 'reparo']).then((data: iRep[]) => {
       // Obter a média de reparo
-      const average = data.reduce((acc, curr): number => acc + curr.reparo, 0) / data.length;
-      setCurrentRepairs(average * 100);
+      const average = getAverage(data, 'reparo');
+      setCurrentRepairs(average);
     });
   }, [currentMonthBeginningDateString]);
 

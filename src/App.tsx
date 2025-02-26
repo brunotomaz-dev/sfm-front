@@ -7,7 +7,6 @@ import PrivateRoute from './api/PrivateRoute';
 import Sidebar from './components/sidebar';
 import { groupLevels } from './helpers/constants';
 import HomeFake from './pages/example';
-import HistoricLines from './pages/histLines';
 import Home from './pages/Home/home';
 import LiveLines from './pages/LiveLines/liveLines';
 import LoginPage from './pages/Login/login';
@@ -33,10 +32,6 @@ function App() {
             element={<PrivateRoute element={<ProductionLive />} allowedGroups={[...groupLevels[4]]} />}
           />
           <Route path='live' element={<PrivateRoute element={<LiveLines />} allowedGroups={[...groupLevels[5]]} />} />
-          <Route
-            path='h-lines'
-            element={<PrivateRoute element={<HistoricLines />} allowedGroups={[...groupLevels[4]]} />}
-          />
           <Route
             path='management'
             element={<PrivateRoute element={<Management />} allowedGroups={[...groupLevels[4]]} />}

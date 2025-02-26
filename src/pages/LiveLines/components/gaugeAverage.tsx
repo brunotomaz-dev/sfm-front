@@ -118,7 +118,7 @@ const GaugeAverage: React.FC<GaugeAverageProps> = ({ average, turn }) => {
   };
 
   return (
-    <Col style={{ minWidth: '150px', minHeight: '150px' }}>
+    <Col style={{ minWidth: '200px', minHeight: '150px' }}>
       <EChartsReact option={option} style={{ height: '100%', width: '100%' }} />
     </Col>
   );
