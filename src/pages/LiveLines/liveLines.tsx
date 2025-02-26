@@ -317,7 +317,7 @@ const LiveLines: React.FC = () => {
         </Col>
         {/* ------------------------------------------- COLUNA DE BARRAS ------------------------------------------- */}
         <Col xs={5} xl className='card p-2 justify-content-center shadow bg-transparent border-0 mb-lg-0 mb-2'>
-          <BarStops data={infoIHM} />
+          <BarStops data={infoIHM} cycleData={maquinaInfo} />
         </Col>
         {/* ----------------------------------------- COLUNA DE COMPARAÇÃO ----------------------------------------- */}
         <Col xs xl className='card p-2 shadow bg-transparent border-0 mb-lg-0 mb-2'>

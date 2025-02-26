@@ -2,6 +2,9 @@
 type GroupLevel = string[];
 type GroupLevels = Record<number, GroupLevel>;
 
+export const CICLOS_ESPERADOS = 11.2
+export const CICLOS_ESPERADOS_BOL = 7
+
 // Aplicando os tipos
 export const groupLevels: GroupLevels = {
   1: ['Dev'],
@@ -73,3 +76,21 @@ export const colorObj = {
   ["Parada Programada"]: BSColors.DANGER_COLOR,
   ["Não apontado"]: BSColors.WARNING_COLOR,
 }
+
+export const DESC_EFF = {
+  "Troca de Sabor": 15,
+  "Troca de Produto": 35,
+  "Refeição": 65,
+  "Café e Ginástica Laboral": 10,
+  "Treinamento": 60,
+}
+
+export const NOT_EFF = [
+  "Sem Produção",
+  "Backup",
+  "Limpeza para parada de Fábrica",
+  "Saída para backup",
+  "Revezamento",
+  "Manutenção Preventiva",
+  "Manutenção Corretiva Programada",
+]

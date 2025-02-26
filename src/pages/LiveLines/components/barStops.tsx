@@ -1,11 +1,13 @@
 import EChartsReact from 'echarts-for-react';
 import React, { useMemo } from 'react';
 import { Row } from 'react-bootstrap';
-import { BSColors } from '../../../helpers/constants';
+import { BSColors, CICLOS_ESPERADOS, CICLOS_ESPERADOS_BOL, DESC_EFF, NOT_EFF } from '../../../helpers/constants';
 import { iInfoIhmLive } from '../interfaces/infoIhm';
+import { iMaquinaInfo } from '../interfaces/maquinaInfo.interface';
 
 interface BarStopsProps {
   data: iInfoIhmLive[];
+  cycleData: iMaquinaInfo[];
 }
 
 interface StopSummary {
@@ -16,15 +18,102 @@ interface StopSummary {
   impacto: number;
 }
 
-const BarStops: React.FC<BarStopsProps> = ({ data }) => {
-  // Tempo total de paradas
-  const totalStopTime = useMemo(() => {
-    return data.filter((item) => item.status === 'parada').reduce((acc, item) => acc + item.tempo, 0);
+const BarStops: React.FC<BarStopsProps> = ({ data, cycleData }) => {
+  //  Filtro dos itens que não afetam a eficiência
+  const filteredData = useMemo(() => {
+    return data
+      .filter((originalItem) => {
+        // Primeiro verifica se não é um item que não afeta eficiência
+        const isNotEff = NOT_EFF.some(
+          (notEff) =>
+            originalItem.motivo?.includes(notEff) ||
+            originalItem.causa?.includes(notEff) ||
+            originalItem.problema?.includes(notEff)
+        );
+
+        if (isNotEff) return false;
+
+        // Se for parada, verifica DESC_EFF
+        if (originalItem.status === 'parada') {
+          const descEffKey = Object.keys(DESC_EFF).find(
+            (key) =>
+              originalItem.motivo?.includes(key) ||
+              originalItem.causa?.includes(key) ||
+              originalItem.problema?.includes(key)
+          );
+
+          if (descEffKey) {
+            const tempoRestante = originalItem.tempo - DESC_EFF[descEffKey as keyof typeof DESC_EFF];
+
+            // Se tempo restante for <= 0, remove o item
+            if (tempoRestante <= 0) return false;
+
+            // Se houver tempo restante, retorna true para manter o item
+            return true;
+          }
+        }
+
+        // Mantém o item se não foi filtrado anteriormente
+        return true;
+      })
+      .map((item) => {
+        // Se for parada, aplica o desconto no tempo
+        if (item.status === 'parada') {
+          const descEffKey = Object.keys(DESC_EFF).find(
+            (key) => item.motivo?.includes(key) || item.causa?.includes(key) || item.problema?.includes(key)
+          );
+
+          if (descEffKey) {
+            const tempoRestante = item.tempo - DESC_EFF[descEffKey as keyof typeof DESC_EFF];
+            return {
+              ...item,
+              tempo: tempoRestante,
+            };
+          }
+        }
+
+        return { ...item };
+      });
   }, [data]);
+
+  // Calcula o tempo total de parada
+  const totalStopTime = useMemo(
+    () => filteredData.filter((item) => item.status === 'parada').reduce((acc, item) => acc + item.tempo || 0, 0),
+    [filteredData]
+  );
+
+  // Cria a perda por ciclo baixo
+  const cycleLost = useMemo(() => {
+    // Tempo rodando
+    const totalRunTime = filteredData
+      .filter((item) => item.status === 'rodando')
+      .reduce((acc, item) => acc + item.tempo, 0);
+    // Filtra pela maquina rodando
+    cycleData = cycleData.filter((item) => item.status === 'true');
+    // Produto único
+    const product = cycleData.length > 0 ? cycleData[0].produto : '';
+    // Verifica se o produto contém a palavra ' BOL', se tiver usa CICLOS_ESPERADOS, se não CICLOS_ESPERADOS_BOL
+    const ciclosIdeais = product.includes(' BOL') ? CICLOS_ESPERADOS_BOL : CICLOS_ESPERADOS;
+
+    // Média de ciclos por minuto
+    const cycleAverage = cycleData.reduce((acc, item) => acc + item.ciclo_1_min, 0) / cycleData.length;
+    // Diferença entre a média e o esperado
+    const cycleDiff = ciclosIdeais > cycleAverage ? ciclosIdeais - cycleAverage : 0;
+
+    return {
+      ['Perda de Ciclo-Ciclo Baixo-Ciclo Perdido Min']: {
+        problema: `${cycleDiff.toFixed(2)} ciclos/min - ${Math.round((cycleDiff * 2 * totalRunTime) / 10)} cxs/turno`,
+        impacto: 0,
+        motivo: 'Perda de Ciclo',
+        causa: 'Ciclo Baixo',
+        tempo: Math.round((cycleDiff * totalRunTime) / ciclosIdeais),
+      },
+    };
+  }, [cycleData, filteredData]);
 
   const stopSummary = useMemo(() => {
     // Filtra e agrupa os dados por causa
-    const stops = data
+    const stops = filteredData
       .filter((item) => item.status === 'parada')
       .reduce(
         (acc, item) => {
@@ -46,14 +135,22 @@ const BarStops: React.FC<BarStopsProps> = ({ data }) => {
         {} as Record<string, StopSummary>
       );
 
+    const lostCycleTime = cycleLost['Perda de Ciclo-Ciclo Baixo-Ciclo Perdido Min'].tempo;
+
+    // Une os dados de parada com os dados de ciclo baixo se houver dados de ciclos baixos
+    const allStops = lostCycleTime > 0 ? { ...stops, ...cycleLost } : stops;
+
+    // Calcula o tempo total de parada
+    const stopTime = totalStopTime + lostCycleTime;
+
     // Converte para array e calcula o impacto
-    return Object.values(stops)
+    return Object.values(allStops)
       .map((item) => ({
         ...item,
-        impacto: parseFloat(((item.tempo / totalStopTime) * 100).toFixed(2)),
+        impacto: parseFloat(((item.tempo / stopTime) * 100).toFixed(2)),
       }))
       .sort((a, b) => b.tempo - a.tempo);
-  }, [data]);
+  }, [filteredData, cycleLost, totalStopTime]);
 
   // Options para echart de barra
   const option = {
