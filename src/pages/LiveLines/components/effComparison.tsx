@@ -82,7 +82,9 @@ const EfficiencyComparison: React.FC<EfficiencyComparisonProps> = ({
         type: 'bar',
         data: [Math.round(lineEff)],
         z: 2,
-        itemStyle: { color: lineEff >= 90 ? Color(ColorsSTM.GREEN).lighten(0.3).hex() : BSColors.GREY_700_COLOR },
+        itemStyle: {
+          color: Math.round(lineEff) >= 90 ? Color(ColorsSTM.GREEN).lighten(0.3).hex() : BSColors.GREY_700_COLOR,
+        },
         label: {
           show: true,
           position: 'inside',

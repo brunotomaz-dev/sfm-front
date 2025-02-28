@@ -31,6 +31,7 @@ interface iDropdownTurnoProps {
  *   onTurnoChange={handleShiftChange}
  * />
  */
+
 const DropdownTurno: React.FC<iDropdownTurnoProps> = ({ turnos, onTurnoChange }) => {
   const [selectedTurno, setSelectedTurno] = useState<string>('');
 
@@ -47,8 +48,8 @@ const DropdownTurno: React.FC<iDropdownTurnoProps> = ({ turnos, onTurnoChange })
   };
 
   return (
-    <Dropdown className="mb-2">
-      <Dropdown.Toggle variant="light" id="dropdown-basic">
+    <Dropdown className='mb-2'>
+      <Dropdown.Toggle variant='light' id='dropdown-basic'>
         {getDisplayText()}
       </Dropdown.Toggle>
 

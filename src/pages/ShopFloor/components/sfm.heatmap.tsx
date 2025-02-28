@@ -2,10 +2,10 @@ import { format, startOfDay } from 'date-fns';
 import EChartsReact from 'echarts-for-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { getIndicator } from '../../../api/apiRequests';
-import SegmentedButtonTurno from '../../../components/segmentedButton.turno';
 import { ColorsSTM, IndicatorType, TurnosObj } from '../../../helpers/constants';
 import { heatmapAdjust } from '../../../helpers/heatmapAdjust';
 import { iHeatmapData } from '../../../interfaces/Heatmap.interface';
+import SegmentedButtonTurno from './segmentedButton.turno';
 
 interface iHeatmapProps {
   indicator: IndicatorType;

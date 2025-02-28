@@ -111,7 +111,7 @@ const GaugeAverage: React.FC<GaugeAverageProps> = ({ average, turn }) => {
             },
           };
         },
-        data: [{ value: Math.round(average), name: turn }],
+        data: [{ value: average, name: turn }],
         z: 1,
       },
     ],

@@ -40,11 +40,11 @@ export const getIndicator = async (
   }
 };
 
-export const getProduction = async (data: DateParam) => {
+export const getProduction = async (data: DateParam, fields?: string[]) => {
   // Cria o filtro de data
   const dateFilter = createDateFilter(data);
   // Define os parâmetros caso a data possua 2 valores
-  const params = { ...dateFilter };
+  const params = { ...dateFilter, ...(fields && { fields: fields.join(',') }) };
 
   try {
     const response = await api.get('api/qual_prod/', { params: params });
@@ -119,6 +119,16 @@ export const getEstoqueAtual = async () => {
     throw error;
   }
 };
+
+export const getEstoqueMovimentacao = async () => {
+  try {
+    const response = await api.get('api/productionByDay/');
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar dados de movimentação de estoque', error);
+    throw error;
+  }
+}
 
 export const getCarrinhosCount = async (
   data_inicial: string,
