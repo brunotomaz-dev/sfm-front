@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Card } from 'react-bootstrap';
 import PageLayout from '../../components/pageLayout';
+import MonthProdCardsMNT from './components/monthProduction.Management';
 import TodayProductionCards from './components/todayProductionCard';
 
 const Management: React.FC = () => {
@@ -21,7 +21,7 @@ const Management: React.FC = () => {
     <PageLayout>
       <h1 className='text-center p-2'>Gestão de Produção</h1>
       <TodayProductionCards today={today} />
-      <Card>Linha com a produção total do mês (período)</Card>
+      <MonthProdCardsMNT firstDay={firstDay} />
     </PageLayout>
   );
 };

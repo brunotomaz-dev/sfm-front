@@ -52,7 +52,10 @@ const TodayProductionCards: React.FC<iTodayProductionCardsProps> = ({ today }) =
     // Retorna a produção do turno
     return productionCF.filter((item) => {
       const hour = Number(item.hora.split(':')[0]);
-      return hour >= turnos[turno as keyof typeof turnos].start && hour < turnos[turno as keyof typeof turnos].end;
+      return (
+        hour >= turnos[turno as keyof typeof turnos].start &&
+        hour < turnos[turno as keyof typeof turnos].end
+      );
     });
   };
 
@@ -102,13 +105,19 @@ const TodayProductionCards: React.FC<iTodayProductionCardsProps> = ({ today }) =
             <h6>Produção Matutino</h6>
             <p className='fs-3'>{Math.round(morningProduction / 10).toLocaleString('pt-BR')} cxs</p>
             <h6>Câmara fria</h6>
-            <p className='fs-3 mb-0'>{Math.round(productionCFMorning).toLocaleString('pt-BR')} cxs</p>
+            <p className='fs-3 mb-0'>
+              {Math.round(productionCFMorning).toLocaleString('pt-BR')} cxs
+            </p>
           </Col>
           <Col>
             <h6>Produção Vespertino</h6>
-            <p className='fs-3'>{Math.round(afternoonProduction / 10).toLocaleString('pt-BR')} cxs</p>
+            <p className='fs-3'>
+              {Math.round(afternoonProduction / 10).toLocaleString('pt-BR')} cxs
+            </p>
             <h6>Câmara fria</h6>
-            <p className='fs-3 mb-0'>{Math.round(productionCFAfternoon).toLocaleString('pt-BR')} cxs</p>
+            <p className='fs-3 mb-0'>
+              {Math.round(productionCFAfternoon).toLocaleString('pt-BR')} cxs
+            </p>
           </Col>
         </Row>
       </Card.Body>

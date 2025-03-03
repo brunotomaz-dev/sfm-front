@@ -14,43 +14,60 @@ const HomeCartCountCart: React.FC = () => {
 
   //Inicializar estado local
   const [cartCount, setCartCount] = useState<iCartCount[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Faz a requisição do indicador e salva no estado
-    void getCarrinhosCount(nowString, nowString).then((data: iCartCount[]) => setCartCount(data));
+    try {
+      void getCarrinhosCount(firstDayString, nowString).then((data: iCartCount[]) =>
+        setCartCount(data)
+      );
+    } catch (err: any) {
+      setError(err.message);
+      setCartCount([]);
+    }
   }, [firstDayString, nowString]);
 
   return (
-    <Card className="shadow border-0 p-3 mb-2">
+    <Card className='shadow border-0 p-3 mb-2'>
       <h3>Carrinhos Produzidos</h3>
-      <Row>
-        <Table striped responsive>
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th className="text-end">Quantidade</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cartCount.map(({ Turno, Contagem_Carrinhos, Data_apontamento }) => (
-              <tr key={Turno + Data_apontamento}>
-                <td>{Turno}</td>
-                <td className="text-end">{Contagem_Carrinhos.toLocaleString('pt-BR')}</td>
+      {!error ? (
+        <Row>
+          <Table striped responsive>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th className='text-end'>Quantidade</th>
               </tr>
-            ))}
-            <tr>
-              <td>
-                <strong>Total</strong>
-              </td>
-              <td className="text-end">
-                <strong>
-                  {cartCount.reduce((acc, curr) => acc + curr.Contagem_Carrinhos, 0).toLocaleString('pt-BR')}
-                </strong>
-              </td>
-            </tr>
-          </tbody>
-        </Table>
-      </Row>
+            </thead>
+            <tbody>
+              {cartCount.map(({ Turno, Contagem_Carrinhos, Data_apontamento }) => (
+                <tr key={Turno + Data_apontamento}>
+                  <td>{Turno}</td>
+                  <td className='text-end'>{Contagem_Carrinhos.toLocaleString('pt-BR')}</td>
+                </tr>
+              ))}
+              <tr>
+                <td>
+                  <strong>Total</strong>
+                </td>
+                <td className='text-end'>
+                  <strong>
+                    {cartCount
+                      .reduce((acc, curr) => acc + curr.Contagem_Carrinhos, 0)
+                      .toLocaleString('pt-BR')}
+                  </strong>
+                </td>
+              </tr>
+            </tbody>
+          </Table>
+        </Row>
+      ) : (
+        <div className='alert alert-warning text-center' role='alert'>
+          <i className='bi bi-exclamation-triangle me-2'></i>
+          {error}
+        </div>
+      )}
     </Card>
   );
 };

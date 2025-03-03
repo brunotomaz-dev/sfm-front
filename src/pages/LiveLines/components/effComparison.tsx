@@ -1,6 +1,7 @@
 import Color from 'color';
 import EChartsReact from 'echarts-for-react';
 import React from 'react';
+import { Row } from 'react-bootstrap';
 import { BSColors, ColorsSTM } from '../../../helpers/constants';
 
 interface EfficiencyComparisonProps {
@@ -83,7 +84,10 @@ const EfficiencyComparison: React.FC<EfficiencyComparisonProps> = ({
         data: [Math.round(lineEff)],
         z: 2,
         itemStyle: {
-          color: Math.round(lineEff) >= 90 ? Color(ColorsSTM.GREEN).lighten(0.3).hex() : BSColors.GREY_700_COLOR,
+          color:
+            Math.round(lineEff) >= 90
+              ? Color(ColorsSTM.GREEN).lighten(0.3).hex()
+              : BSColors.GREY_700_COLOR,
         },
         label: {
           show: true,
@@ -225,7 +229,17 @@ const EfficiencyComparison: React.FC<EfficiencyComparisonProps> = ({
   //   ],
   // };
 
-  return <EChartsReact option={option} style={{ height: '100%', width: '100%' }} />;
+  return (
+    <>
+      {factoryEff > 0 ? (
+        <EChartsReact option={option} style={{ height: '100%', width: '100%' }} />
+      ) : (
+        <Row className='align-items-center text-center h-100'>
+          <h5>Não médias registradas</h5>
+        </Row>
+      )}
+    </>
+  );
 };
 
 export default EfficiencyComparison;

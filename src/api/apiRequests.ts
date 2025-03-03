@@ -139,7 +139,10 @@ export const getCarrinhosCount = async (
     const response = await api.get('api/cart_count/', {
       params: { period },
     });
-    return response.data.results as iCartCount[];
+    if (response.status === 200 && response.data.results) {
+      return response.data.results as iCartCount[];
+    }
+    throw new Error('Não foram encontrados dados para a data selecionada');
   } catch (error) {
     console.error('Erro ao buscar contagem de carrinhos', error);
     throw error;

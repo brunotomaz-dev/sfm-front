@@ -25,7 +25,12 @@ const Timeline: React.FC<TimelineProps> = ({ data }) => {
 
       return {
         ...item,
-        causa: item.status === 'rodando' ? '' : item.status === 'parada' && item.motivo === null ? '' : item.causa,
+        causa:
+          item.status === 'rodando'
+            ? ''
+            : item.status === 'parada' && item.motivo === null
+              ? ''
+              : item.causa,
         motivo:
           item.status === 'rodando'
             ? 'Rodando'
@@ -35,7 +40,11 @@ const Timeline: React.FC<TimelineProps> = ({ data }) => {
                 ? 'Não apontado'
                 : item.motivo,
         problema:
-          item.status === 'rodando' ? '' : item.status === 'parada' && item.motivo === null ? '' : item.problema,
+          item.status === 'rodando'
+            ? ''
+            : item.status === 'parada' && item.motivo === null
+              ? ''
+              : item.problema,
         startMinutes,
         endMinutes,
       };
@@ -166,15 +175,19 @@ const Timeline: React.FC<TimelineProps> = ({ data }) => {
   }, [data.length, timeRange.min, timeRange.max, uniqueMotivos]);
 
   return (
-    <Row className='p-2'>
-      <EChartsReact
-        key={chartKey}
-        option={option}
-        style={{ height: '150px' }}
-        notMerge={true} // Força recriação completa do gráfico
-        lazyUpdate={false} // Desativa atualizações lazy
-      />
-    </Row>
+    <>
+      {data.length > 0 && (
+        <Row className='p-2'>
+          <EChartsReact
+            key={chartKey}
+            option={option}
+            style={{ height: '150px' }}
+            notMerge={true} // Força recriação completa do gráfico
+            lazyUpdate={false} // Desativa atualizações lazy
+          />
+        </Row>
+      )}
+    </>
   );
 };
 

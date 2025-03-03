@@ -9,6 +9,7 @@ interface LineCycleProps {
 }
 
 const LineCycle: React.FC<LineCycleProps> = ({ maqInfo }) => {
+  // Dados para o gráfico de linha
   const cycles = maqInfo.map((maq) => maq.ciclo_1_min);
   let hour = maqInfo.map((maq) => maq.hora_registro);
 
@@ -20,7 +21,9 @@ const LineCycle: React.FC<LineCycleProps> = ({ maqInfo }) => {
 
   // Média de ciclos (só com a máquina no status 'true')
   const maqTrue = maqInfo.filter((item) => item.status === 'true');
-  const averageCycles = (maqTrue.reduce((acc, item) => acc + item.ciclo_1_min, 0) / maqTrue.length).toFixed(2);
+  const averageCycles = (
+    maqTrue.reduce((acc, item) => acc + item.ciclo_1_min, 0) / maqTrue.length
+  ).toFixed(2);
   // options for the chart line
   const options = {
     textStyle: {
@@ -97,9 +100,13 @@ const LineCycle: React.FC<LineCycleProps> = ({ maqInfo }) => {
   };
 
   return (
-    <Row className='mb-2 p-2' style={{ height: '220px' }}>
-      <EChartsReact option={options} style={{ height: '100%', width: '100%' }} />
-    </Row>
+    <>
+      {maqInfo.length > 0 && (
+        <Row className='mb-2 p-2' style={{ height: '220px' }}>
+          <EChartsReact option={options} style={{ height: '100%', width: '100%' }} />
+        </Row>
+      )}
+    </>
   );
 };
 
